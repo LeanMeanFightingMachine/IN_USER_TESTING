@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+ 
+<application xmlns="http://ns.adobe.com/air/application/2.0">
+    <id>INUserTesting</id>
+    <version>1.0</version>
+    <filename>INUserTesting</filename>
+    <name>INUserTesting</name>
+    <description>
+        <text xml:lang="en">Create your own animated GIFs and upload them to the ANIM.AE website.</text>
+    </description>
+    <copyright>Copyright (c) 2011 IN</copyright>
+    <initialWindow>
+        <title>INUserTesting</title>
+        <content>INUserTesting.swf</content>
+        <transparent>false</transparent>
+        <visible>true</visible>
+        <minimizable>true</minimizable>
+        <maximizable>true</maximizable>
+        <resizable>false</resizable>
+        <width>1000</width>
+        <height>600</height>
+        <minSize>750 500</minSize>
+        <!--maxSize>1280 960</maxSize-->
+    </initialWindow>
+    <installFolder>INUserTesting</installFolder>
+    <programMenuFolder>INUserTesting</programMenuFolder>
+    <icon>
+        <image16x16>icons/AIRApp_16.png</image16x16>
+        <image32x32>icons/AIRApp_32.png</image32x32>
+        <image48x48>icons/AIRApp_48.png</image48x48>
+        <image128x128>icons/AIRApp_128.png</image128x128>
+    </icon>
+    <customUpdateUI>true</customUpdateUI>
+    <allowBrowserInvocation>false</allowBrowserInvocation>
+</application>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- *******************************************************************************************************
+	
+	based on : Stephan Partzsch
+	website	 : http://www.powerflasher.de
+	date	 : 05.10.2007
+	
+	edit by  : Marvin Blase
+	website  : http://www.beautifycode.com
+	date	 : 14.08.2010
+	
+	This Build-file is working with FlexSDK 4.1.0.16076 and AIR 2.0.2.12610
+	
+******************************************************************************************************** -->
+
+<project default="1. Cleanup Directories" name="Build IN">
+	<!-- Path to Flex 4.1 SDK -->
+	<property name="sdk_dir" value="/Applications/FDT/plugins/flex_sdk_4.1.0.16076" />
+	<property name="mxmlc" value="${sdk_dir}/lib/mxmlc.jar" />
+	<property name="adl" value="${sdk_dir}/bin/adl" />
+	<property name="adt" value="${sdk_dir}/lib/adt.jar" />
+
+	<!-- Project properties -->
+	<property name="app_name" value="INUserTesting" />
+	<property name="app_root_dir" value="." />
+	<property name="app_type" value="as" />
+	<property name="assets_dir_name" value="assets" />
+	
+	<!-- Certificate properties -->
+	<property name="certificate_name" value="INUserTestingCertificate" />
+	<property name="certificate_pw" value="pa55w0rd" />
+
+	<!-- Required for creating a new Certificate -->
+	<property name="cert_name" value="INUserTestingCertificate" />
+	<property name="password" value="pa55w0rd" />
+
+	<property name="org_name" value="Emirates" />
+	<property name="org_unit" value="IN" />
+	<property name="country" value="GB" />
+	<property name="key_type" value="2048-RSA" />
+	<property name="cert_loc" location="${app_root_dir}/${assets_dir_name}/settings" />
+
+
+	<!-- The following can remain unchanged -->
+	<property name="compilation" value="${app_name}.swf" />
+	<property name="air_file" value="${app_name}.air" />
+	<property name="app_descriptor" value="app.xml" />
+	<property name="source_path" value="${app_root_dir}/src/" />
+	<property name="source-lib_path" value="${app_root_dir}/src-lib/" />
+	<property name="lib_path" value="${app_root_dir}/lib/" />
+	<property name="main_source" value="${app_root_dir}/src/com/emirates/emiratesIn/Application.as" />
+	<property name="certificate" value="${app_root_dir}/${assets_dir_name}/settings/${certificate_name}.pfx" />
+	<property name="debug_dir" location="${app_root_dir}/debug" />
+	<property name="publish_dir" location="${app_root_dir}/publish" />
+	<property name="build_dir" location="${app_root_dir}/build" />
+	<property name="assets_dir" location="${app_root_dir}/${assets_dir_name}" />
+
+
+	<!-- Clean existing directories -->
+	<target name="1. Cleanup Directories" description="clean up">
+		<delete dir="${debug_dir}" />
+		<delete dir="${build_dir}" />
+		<delete dir="${publish_dir}" />
+	</target>
+
+
+	<!-- Create required directories -->
+	<target name="2. Build New Directories">
+		<mkdir dir="${debug_dir}" />
+		<mkdir dir="${publish_dir}" />
+		<mkdir dir="${build_dir}" />
+	</target>
+
+
+	<!-- Compile SWF to build-directory for packaging -->
+	<target name="3. Compile SWF" depends="2. Build New Directories">
+		<java jar="${mxmlc}" fork="true" failonerror="true">
+			<arg value="-debug=false" />
+			<arg value="+flexlib=${sdk_dir}/frameworks" />
+			<arg value="+configname=air" />
+			<arg value="-source-path=${source_path}" />
+			<arg value="-source-path=${source-lib_path}" />
+			<arg value="-library-path=${lib_path}" />
+			<arg value="-file-specs=${main_source}" />
+			<arg value="-output=${build_dir}/${compilation}" />
+		</java>
+	</target>
+
+	<!-- Compile SWF to debug directory and copy assets to it -->
+	<target name="4. Compile SWF (Debug)" depends="2. Build New Directories">
+		<java jar="${mxmlc}" fork="true" failonerror="true">
+			<arg value="-debug=true" />
+			<arg value="+flexlib=${sdk_dir}/frameworks" />
+			<arg value="+configname=air" />
+			<arg value="-source-path=${source_path}" />
+			<arg value="-source-path=${source-lib_path}" />
+			<arg value="-library-path=${lib_path}" />
+			<arg value="-file-specs=${main_source}" />
+			<arg value="-output=${debug_dir}/${compilation}" />
+		</java>
+		<copy todir="${debug_dir}">
+			<fileset dir="${assets_dir}" />
+		</copy>
+	</target>
+
+	<!-- Show application without packaging -->
+	<target name="5. Test Application" depends="4. Compile SWF (Debug)">
+		<exec executable="${adl}">
+			<arg value="${app_descriptor}" />
+			<arg value="${debug_dir}" />
+		</exec>
+		<!--fdt.startDebugger projectname="Build AIR2" /-->
+	</target>
+
+
+	<!-- Packaging the application to an air-file & save it in the publish directory -->
+	<target name="6. Package Application" depends="3. Compile SWF">
+		<java jar="${adt}" fork="true" failonerror="true">
+			<arg value="-package" />
+			<arg value="-storetype" />
+			<arg value="pkcs12" />
+			<arg value="-keystore" />
+			<arg value="${certificate}" />
+			<arg value="-storepass" />
+			<arg value="${certificate_pw}" />
+
+			<arg value="${publish_dir}/${air_file}" />
+			<arg value="${app_descriptor}" />
+			<arg value="-C" />
+			<arg value="${build_dir}/" />
+			<arg value="${compilation}" />
+
+			<arg value="-C" />
+			<arg value="${assets_dir}" />
+			<arg value="icons" />
+		</java>
+	</target>
+
+
+	<!-- Creating a digital ID certificate -->
+	<target name="7. Create New Certificate">
+		<java jar="${adt}" fork="true">
+			<arg value="-certificate" />
+			<arg value="-cn" />
+			<arg value="${cert_name}" />
+			<arg value="-ou" />
+			<arg value="${org_unit}" />
+			<arg value="-o" />
+			<arg value="${org_name}" />
+			<arg value="-c" />
+			<arg value="${country}" />
+			<arg value="${key_type}" />
+			<arg value="${cert_loc}/${cert_name}.pfx" />
+			<arg value="${password}" />
+		</java>
+	</target>
+</project>

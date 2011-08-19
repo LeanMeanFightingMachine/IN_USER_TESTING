@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn
 {
+	import com.emirates.emiratesIn.controller.signals.TrainingCompleteSignal;
 	import com.emirates.emiratesIn.controller.commands.AttentionUpdatedCommand;
 	import com.emirates.emiratesIn.controller.signals.AttentionUpdatedSignal;
 	import com.emirates.emiratesIn.controller.signals.StartTrainingSignal;
@@ -40,6 +41,7 @@ package com.emirates.emiratesIn
 			// Signals
 			injector.mapSingleton(AttentionUpdatedSignal);
 			injector.mapSingleton(StartTrainingSignal);
+			injector.mapSingleton(TrainingCompleteSignal);
 
 			// Signals to commands
 			//signalCommandMap.mapSignalClass(StartTrainingSignal, StartTrainingCommand);

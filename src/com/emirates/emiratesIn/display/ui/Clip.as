@@ -9,15 +9,17 @@ package com.emirates.emiratesIn.display.ui
 	public class Clip extends Sprite
 	{
 		private var _dirty:Boolean = false;
+		private var _showing:Boolean = true;
 		
 		public function Clip()
 		{
 			visible = false;
+			_showing = false;
 		}
 		
 		public function show():void
 		{
-			visible = true;
+			_showing = true;
 			
 			if(stage)
 			{
@@ -34,6 +36,7 @@ package com.emirates.emiratesIn.display.ui
 		public function hide():void
 		{
 			visible = false;
+			_showing = false;
 			
 			if(stage.hasEventListener(Event.RESIZE))
 			{
@@ -69,6 +72,8 @@ package com.emirates.emiratesIn.display.ui
 		{
 			_dirty = false;
 			removeEventListener(Event.ENTER_FRAME, updateHandler);
+			
+			if(!visible && _showing) visible = true;
 			
 			draw();
 		}

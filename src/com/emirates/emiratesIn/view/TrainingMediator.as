@@ -2,9 +2,12 @@ package com.emirates.emiratesIn.view
 {
 	import com.emirates.emiratesIn.controller.signals.AttentionUpdatedSignal;
 	import com.emirates.emiratesIn.controller.signals.StartTrainingSignal;
+	import com.emirates.emiratesIn.controller.signals.TrainingCompleteSignal;
 	import com.emirates.emiratesIn.view.components.TrainingView;
 
 	import org.robotlegs.mvcs.Mediator;
+
+	import flash.events.Event;
 
 	/**
 	 * @author fraserhobbs
@@ -18,6 +21,9 @@ package com.emirates.emiratesIn.view
 		public var startTrainingSignal:StartTrainingSignal;
 		
 		[Inject]
+		public var trainingCompleteSignal : TrainingCompleteSignal;
+		
+		[Inject]
 		public var attentionUpdatedSignal:AttentionUpdatedSignal;
 		
 		public function TrainingMediator()
@@ -29,8 +35,10 @@ package com.emirates.emiratesIn.view
 		{
 			startTrainingSignal.add( startTrainingSignalHandler );
 			attentionUpdatedSignal.add( attentionUpdatedSignalHandler );
+			
+			view.addEventListener(Event.COMPLETE, viewCompleteHandler);
 		}
-		
+
 		private function startTrainingSignalHandler():void
 		{
 			view.show();
@@ -39,6 +47,11 @@ package com.emirates.emiratesIn.view
 		private function attentionUpdatedSignalHandler(value:int):void
 		{
 			view.attention(value);
+		}
+		
+		private function viewCompleteHandler(event : Event) : void
+		{
+			//trainingCompleteSignal.dispatch();
 		}
 	}
 }

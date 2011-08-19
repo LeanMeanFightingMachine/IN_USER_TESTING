@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn.view.components
 {
+	import flash.events.Event;
 	import com.emirates.emiratesIn.display.ui.events.ScreenEvent;
 	import com.emirates.emiratesIn.display.ui.Screen;
 	import com.emirates.emiratesIn.display.ui.GameOne;
@@ -169,6 +170,8 @@ package com.emirates.emiratesIn.view.components
 		private function gameTwoSuccessPopupComplete(event : PopupEvent) : void
 		{
 			_gameTwoSuccessPopup.hide();
+			
+			dispatchEvent(new Event(Event.COMPLETE));
 		}
 
 	}

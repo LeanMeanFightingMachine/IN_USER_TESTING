@@ -1,7 +1,7 @@
 package com.emirates.emiratesIn.view
 {
 	import com.emirates.emiratesIn.controller.signals.AttentionUpdatedSignal;
-	import com.emirates.emiratesIn.controller.signals.StartTrainingSignal;
+	import com.emirates.emiratesIn.controller.signals.TrainingStartSignal;
 	import com.emirates.emiratesIn.controller.signals.TrainingCompleteSignal;
 	import com.emirates.emiratesIn.view.components.TrainingView;
 
@@ -18,7 +18,7 @@ package com.emirates.emiratesIn.view
 		public var view:TrainingView;
 		
 		[Inject]
-		public var startTrainingSignal:StartTrainingSignal;
+		public var trainingStartSignal:TrainingStartSignal;
 		
 		[Inject]
 		public var trainingCompleteSignal : TrainingCompleteSignal;
@@ -33,13 +33,13 @@ package com.emirates.emiratesIn.view
 		
 		override public function onRegister():void
 		{
-			startTrainingSignal.add( startTrainingSignalHandler );
+			trainingStartSignal.add( startHandler );
 			attentionUpdatedSignal.add( attentionUpdatedSignalHandler );
 			
 			view.addEventListener(Event.COMPLETE, viewCompleteHandler);
 		}
 
-		private function startTrainingSignalHandler():void
+		private function startHandler():void
 		{
 			view.show();
 		}
@@ -51,7 +51,8 @@ package com.emirates.emiratesIn.view
 		
 		private function viewCompleteHandler(event : Event) : void
 		{
-			//trainingCompleteSignal.dispatch();
+			view.hide();
+			trainingCompleteSignal.dispatch();
 		}
 	}
 }

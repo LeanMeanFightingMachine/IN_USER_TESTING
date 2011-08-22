@@ -3,11 +3,11 @@ package com.emirates.emiratesIn.controller.signals
 	import org.osflash.signals.Signal;
 
 	/**
-	 * @author fraserhobbs
+	 * @author Fraser Hobbs
 	 */
-	public class StartTrainingSignal extends Signal
+	public class NoTestsSignal extends Signal
 	{
-		public function StartTrainingSignal()
+		public function NoTestsSignal()
 		{
 		}
 	}

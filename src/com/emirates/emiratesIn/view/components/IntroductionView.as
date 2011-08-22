@@ -1,35 +1,39 @@
 package com.emirates.emiratesIn.view.components
 {
+	import com.emirates.emiratesIn.display.ui.Screen;
+	import com.emirates.emiratesIn.display.ui.events.ScreenEvent;
+	import com.emirates.emiratesIn.enum.Dict;
+
 	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import com.bit101.components.PushButton;
-	import flash.display.Sprite;
 
 	/**
 	 * @author fraserhobbs
 	 */
 	public class IntroductionView extends View
 	{
-		public static const START:String = "IntroductionView_start";
-		
-		private var _startButton:PushButton = new PushButton();
+		private var _introScreen:Screen = new Screen();
 		
 		public function IntroductionView()
 		{
-			addChild(_startButton);
-			_startButton.label = "Start";
-			_startButton.addEventListener(MouseEvent.CLICK, startButtonClickHandler);
+			_introScreen.heading = Dict.INTRODUCTION_INTRO_HEADING;
+			_introScreen.body = Dict.INTRODUCTION_INTRO_BODY;
+			_introScreen.button = Dict.INTRODUCTION_INTRO_BUTTON;
+			_introScreen.addEventListener(ScreenEvent.NEXT, introScreenNextHandler);
+			addChild(_introScreen);
 		}
 		
-		override protected function resize():void
+		override public function show() : void
 		{
-			_startButton.x = (stage.stageWidth - _startButton.width) * 0.5;
-			_startButton.y = stage.stageHeight - 50;
+			super.show();
+			
+			_introScreen.show();
 		}
-		
-		private function startButtonClickHandler(event : MouseEvent) : void
+
+		private function introScreenNextHandler(event : ScreenEvent) : void
 		{
-			dispatchEvent(new Event(START));
+			_introScreen.hide();
+
+			dispatchEvent(new Event(Event.COMPLETE));
 		}
 	}
 }

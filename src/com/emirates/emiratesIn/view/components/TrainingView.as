@@ -31,7 +31,7 @@ package com.emirates.emiratesIn.view.components
 		
 		public function TrainingView()
 		{
-			visible = false;
+			super();
 
 			_introScreen.heading = Dict.TRAINING_INTRO_HEADING;
 			_introScreen.body = Dict.TRAINING_INTRO_BODY;
@@ -170,6 +170,7 @@ package com.emirates.emiratesIn.view.components
 		private function gameTwoSuccessPopupComplete(event : PopupEvent) : void
 		{
 			_gameTwoSuccessPopup.hide();
+			_gameTwo.hide();
 			
 			dispatchEvent(new Event(Event.COMPLETE));
 		}

@@ -9,6 +9,7 @@ package com.emirates.emiratesIn.model
 	{
 		public function ResultsModel()
 		{
+			
 		}
 	}
 }

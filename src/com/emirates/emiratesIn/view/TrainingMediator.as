@@ -1,8 +1,9 @@
 package com.emirates.emiratesIn.view
 {
-	import com.emirates.emiratesIn.controller.signals.AttentionUpdatedSignal;
-	import com.emirates.emiratesIn.controller.signals.TrainingStartSignal;
-	import com.emirates.emiratesIn.controller.signals.TrainingCompleteSignal;
+	import com.emirates.emiratesIn.controller.signals.AttentionUpdateSignal;
+	import com.emirates.emiratesIn.controller.signals.GotNextStateSignal;
+	import com.emirates.emiratesIn.controller.signals.StateCompleteSignal;
+	import com.emirates.emiratesIn.enum.State;
 	import com.emirates.emiratesIn.view.components.TrainingView;
 
 	import org.robotlegs.mvcs.Mediator;
@@ -18,13 +19,13 @@ package com.emirates.emiratesIn.view
 		public var view:TrainingView;
 		
 		[Inject]
-		public var trainingStartSignal:TrainingStartSignal;
+		public var nextStateSignal : GotNextStateSignal;
 		
 		[Inject]
-		public var trainingCompleteSignal : TrainingCompleteSignal;
+		public var stateCompleteSignal : StateCompleteSignal;
 		
 		[Inject]
-		public var attentionUpdatedSignal:AttentionUpdatedSignal;
+		public var attentionUpdatedSignal:AttentionUpdateSignal;
 		
 		public function TrainingMediator()
 		{
@@ -33,18 +34,21 @@ package com.emirates.emiratesIn.view
 		
 		override public function onRegister():void
 		{
-			trainingStartSignal.add( startHandler );
-			attentionUpdatedSignal.add( attentionUpdatedSignalHandler );
+			nextStateSignal.add( stateHandler );
+			attentionUpdatedSignal.add( attentionUpdatedHandler );
 			
 			view.addEventListener(Event.COMPLETE, viewCompleteHandler);
 		}
 
-		private function startHandler():void
+		private function stateHandler(value:String):void
 		{
-			view.show();
+			if (value == State.TRAINING)
+			{
+				view.show();
+			}
 		}
 		
-		private function attentionUpdatedSignalHandler(value:int):void
+		private function attentionUpdatedHandler(value:int):void
 		{
 			view.attention(value);
 		}
@@ -52,7 +56,7 @@ package com.emirates.emiratesIn.view
 		private function viewCompleteHandler(event : Event) : void
 		{
 			view.hide();
-			trainingCompleteSignal.dispatch();
+			stateCompleteSignal.dispatch();
 		}
 	}
 }

@@ -1,22 +1,29 @@
 package com.emirates.emiratesIn
 {
-	import com.emirates.emiratesIn.controller.signals.NoTestsSignal;
-	import com.emirates.emiratesIn.controller.signals.NextTestSignal;
-	import com.emirates.emiratesIn.controller.commands.AttentionUpdatedCommand;
-	import com.emirates.emiratesIn.controller.commands.IntroductionCompleteCommand;
+	import com.emirates.emiratesIn.controller.commands.TestRetryCommand;
+	import com.emirates.emiratesIn.controller.commands.AttentionUpdateCommand;
+	import com.emirates.emiratesIn.controller.commands.GotNextStateCommand;
+	import com.emirates.emiratesIn.controller.commands.GotNextTestCommand;
 	import com.emirates.emiratesIn.controller.commands.StartupCommand;
-	import com.emirates.emiratesIn.controller.commands.TestingCompleteCommand;
-	import com.emirates.emiratesIn.controller.commands.TestingStartCommand;
-	import com.emirates.emiratesIn.controller.commands.TrainingCompleteCommand;
-	import com.emirates.emiratesIn.controller.signals.AttentionUpdatedSignal;
-	import com.emirates.emiratesIn.controller.signals.IntroductionCompleteSignal;
-	import com.emirates.emiratesIn.controller.signals.IntroductionStartSignal;
-	import com.emirates.emiratesIn.controller.signals.TestingCompleteSignal;
-	import com.emirates.emiratesIn.controller.signals.TestingStartSignal;
-	import com.emirates.emiratesIn.controller.signals.TrainingCompleteSignal;
-	import com.emirates.emiratesIn.controller.signals.TrainingStartSignal;
+	import com.emirates.emiratesIn.controller.commands.StateCompleteCommand;
+	import com.emirates.emiratesIn.controller.commands.TestCompleteCommand;
+	import com.emirates.emiratesIn.controller.commands.TestStartCommand;
+	import com.emirates.emiratesIn.controller.signals.AttentionUpdateSignal;
+	import com.emirates.emiratesIn.controller.signals.GotNextStateSignal;
+	import com.emirates.emiratesIn.controller.signals.GotNextTestSignal;
+	import com.emirates.emiratesIn.controller.signals.NoTestsSignal;
+	import com.emirates.emiratesIn.controller.signals.StateCompleteSignal;
+	import com.emirates.emiratesIn.controller.signals.TestCompleteSignal;
+	import com.emirates.emiratesIn.controller.signals.TestFailSignal;
+	import com.emirates.emiratesIn.controller.signals.TestRetrySignal;
+	import com.emirates.emiratesIn.controller.signals.TestStartSignal;
+	import com.emirates.emiratesIn.controller.signals.TestSuccessSignal;
+	import com.emirates.emiratesIn.controller.signals.TestUpdateSignal;
 	import com.emirates.emiratesIn.model.AttentionModel;
 	import com.emirates.emiratesIn.model.ResultsModel;
+	import com.emirates.emiratesIn.model.StateModel;
+	import com.emirates.emiratesIn.model.TestModel;
+	import com.emirates.emiratesIn.model.TestingModel;
 	import com.emirates.emiratesIn.net.Attention;
 	import com.emirates.emiratesIn.net.events.AttentionEvent;
 	import com.emirates.emiratesIn.view.IntroductionMediator;
@@ -46,29 +53,37 @@ package com.emirates.emiratesIn
 			commandMap.mapEvent( ContextEvent.STARTUP, StartupCommand, ContextEvent, true );
 			
 			// Events to commands
-			commandMap.mapEvent(AttentionEvent.UPDATED, AttentionUpdatedCommand, AttentionEvent);
+			commandMap.mapEvent(AttentionEvent.UPDATED, AttentionUpdateCommand, AttentionEvent);
 			
 			// Models
 			injector.mapSingleton(AttentionModel);
 			injector.mapSingleton(ResultsModel);
+			injector.mapSingleton(StateModel);
+			injector.mapSingleton(TestingModel);
+			injector.mapSingleton(TestModel);
 
 			// Signals
-			injector.mapSingleton(AttentionUpdatedSignal);
-			injector.mapSingleton(NextTestSignal);
-			injector.mapSingleton(NoTestsSignal);
+			injector.mapSingleton(AttentionUpdateSignal);
 			
-			injector.mapSingleton(IntroductionStartSignal);
-			injector.mapSingleton(IntroductionCompleteSignal);
-			injector.mapSingleton(TrainingStartSignal);
-			injector.mapSingleton(TrainingCompleteSignal);
-			injector.mapSingleton(TestingStartSignal);
-			injector.mapSingleton(TestingCompleteSignal);
+			injector.mapSingleton(TestCompleteSignal);
+			injector.mapSingleton(GotNextTestSignal);
+			injector.mapSingleton(NoTestsSignal);
+			injector.mapSingleton(TestStartSignal);
+			injector.mapSingleton(TestRetrySignal);
+			injector.mapSingleton(TestUpdateSignal);
+			injector.mapSingleton(TestSuccessSignal);
+			injector.mapSingleton(TestFailSignal);
+			
+			injector.mapSingleton(GotNextStateSignal);
+			injector.mapSingleton(StateCompleteSignal);
 			
 			// Signals to commands
-			signalCommandMap.mapSignalClass(IntroductionCompleteSignal, IntroductionCompleteCommand);
-			signalCommandMap.mapSignalClass(TrainingCompleteSignal, TrainingCompleteCommand);
-			signalCommandMap.mapSignalClass(TestingStartSignal, TestingStartCommand);
-			signalCommandMap.mapSignalClass(TestingCompleteSignal, TestingCompleteCommand);
+			signalCommandMap.mapSignalClass(StateCompleteSignal, StateCompleteCommand);
+			signalCommandMap.mapSignalClass(GotNextStateSignal, GotNextStateCommand);
+			signalCommandMap.mapSignalClass(TestCompleteSignal, TestCompleteCommand);
+			signalCommandMap.mapSignalClass(GotNextTestSignal, GotNextTestCommand);
+			signalCommandMap.mapSignalClass(TestStartSignal, TestStartCommand);
+			signalCommandMap.mapSignalClass(TestRetrySignal, TestRetryCommand);
 
 			// Views
 			mediatorMap.mapView(IntroductionView, IntroductionMediator);

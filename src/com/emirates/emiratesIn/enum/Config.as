@@ -5,6 +5,9 @@ package com.emirates.emiratesIn.enum
 	 */
 	public class Config
 	{
+		//public static const STATES : Array = [State.INTRODUCTION, State.TRAINING, State.TESTING];
+		public static const STATES : Array = [State.TESTING];
+		
 		public static const TRAINING_GAME_ONE_LEVEL_INCREMENT:int = 10;
 		public static const TRAINING_GAME_ONE_BASE:int = 50;
 		public static const TRAINING_GAME_ONE_LEVELS:int = 1;
@@ -16,5 +19,8 @@ package com.emirates.emiratesIn.enum
 		public static const TESTING_BASE:int = 50;
 		public static const TESTING_INCREMENT:int = 10;
 		public static const TESTING_LEVELS:int = 3;
+		public static const TESTING_SAMPLE_SIZE:int = 100;
+		public static const TESTING_DURATION:int = 10;
+		public static const TESTING_HOTSPOT_MAX_DELAY:int = 5;
 	}
 }

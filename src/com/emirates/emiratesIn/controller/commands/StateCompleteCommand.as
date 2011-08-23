@@ -2,12 +2,12 @@ package com.emirates.emiratesIn.controller.commands
 {
 	import com.emirates.emiratesIn.model.StateModel;
 
-	import org.robotlegs.mvcs.Command;
+	import org.robotlegs.mvcs.SignalCommand;
 
 	/**
 	 * @author Fraser Hobbs
 	 */
-	public class StartupCommand extends Command
+	public class StateCompleteCommand extends SignalCommand
 	{
 		[Inject]
 		public var stateModel:StateModel;

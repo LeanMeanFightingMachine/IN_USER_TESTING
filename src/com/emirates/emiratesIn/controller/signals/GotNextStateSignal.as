@@ -5,7 +5,11 @@ package com.emirates.emiratesIn.controller.signals
 	/**
 	 * @author Fraser Hobbs
 	 */
-	public class TestingStartSignal extends Signal
+	public class GotNextStateSignal extends Signal
 	{
+		public function GotNextStateSignal()
+		{
+			super(String);
+		}
 	}
 }

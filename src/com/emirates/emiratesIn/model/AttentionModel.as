@@ -1,6 +1,6 @@
 package com.emirates.emiratesIn.model
 {
-	import com.emirates.emiratesIn.controller.signals.AttentionUpdatedSignal;
+	import com.emirates.emiratesIn.controller.signals.AttentionUpdateSignal;
 	import org.robotlegs.mvcs.Actor;
 
 	/**
@@ -14,7 +14,7 @@ package com.emirates.emiratesIn.model
 		private var _history : Vector.<int> = new Vector.<int>();
 		
 		[Inject]
-		public var attentionUpdatedSignal:AttentionUpdatedSignal;
+		public var attentionUpdatedSignal:AttentionUpdateSignal;
 		
 		public function AttentionModel()
 		{
@@ -27,7 +27,12 @@ package com.emirates.emiratesIn.model
 			attentionUpdatedSignal.dispatch(value);
 		}
 		
-		public function getAverage() : Number
+		public function getRaw() : Number
+		{
+			return _total / _count;
+		}
+		
+		public function getOverallAverage() : Number
 		{
 			return _total / _count;
 		}
@@ -39,6 +44,7 @@ package com.emirates.emiratesIn.model
 			while (i < _history.length && i < size)
 			{
 				total += _history[i];
+				i++;
 			}
 
 			return total / i;

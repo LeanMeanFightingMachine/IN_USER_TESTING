@@ -5,7 +5,10 @@ package com.emirates.emiratesIn.controller.signals
 	/**
 	 * @author Fraser Hobbs
 	 */
-	public class TestingCompleteSignal extends Signal
+	public class TestSuccessSignal extends Signal
 	{
+		public function TestSuccessSignal()
+		{
+		}
 	}
 }

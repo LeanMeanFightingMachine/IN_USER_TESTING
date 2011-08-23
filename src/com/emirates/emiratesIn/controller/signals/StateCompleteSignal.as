@@ -5,11 +5,10 @@ package com.emirates.emiratesIn.controller.signals
 	/**
 	 * @author Fraser Hobbs
 	 */
-	public class TrainingCompleteSignal extends Signal
+	public class StateCompleteSignal extends Signal
 	{
-		public function TrainingCompleteSignal()
+		public function StateCompleteSignal()
 		{
-			super();
 		}
 	}
 }

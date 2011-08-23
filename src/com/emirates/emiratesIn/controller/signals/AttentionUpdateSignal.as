@@ -5,9 +5,9 @@ package com.emirates.emiratesIn.controller.signals
 	/**
 	 * @author fraserhobbs
 	 */
-	public class AttentionUpdatedSignal extends Signal
+	public class AttentionUpdateSignal extends Signal
 	{
-		public function AttentionUpdatedSignal()
+		public function AttentionUpdateSignal()
 		{
 			super(int);
 		}

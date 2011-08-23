@@ -1,7 +1,8 @@
 package com.emirates.emiratesIn.view
 {
-	import com.emirates.emiratesIn.controller.signals.IntroductionCompleteSignal;
-	import com.emirates.emiratesIn.controller.signals.IntroductionStartSignal;
+	import com.emirates.emiratesIn.controller.signals.GotNextStateSignal;
+	import com.emirates.emiratesIn.controller.signals.StateCompleteSignal;
+	import com.emirates.emiratesIn.enum.State;
 	import com.emirates.emiratesIn.view.components.IntroductionView;
 
 	import org.robotlegs.mvcs.Mediator;
@@ -17,10 +18,10 @@ package com.emirates.emiratesIn.view
 		public var view:IntroductionView;
 		
 		[Inject]
-		public var introductionStartSignal : IntroductionStartSignal;
+		public var nextStateSignal : GotNextStateSignal;
 		
 		[Inject]
-		public var introductionCompleteSignal : IntroductionCompleteSignal;
+		public var stateCompleteSignal : StateCompleteSignal;
 		
 		public function IntroductionMediator()
 		{
@@ -29,20 +30,23 @@ package com.emirates.emiratesIn.view
 		
 		override public function onRegister():void
 		{
-			introductionStartSignal.add( startHandler );
+			nextStateSignal.add( stateHandler );
 			
 			view.addEventListener(Event.COMPLETE, viewCompleteHandler);
 		}
 		
-		private function startHandler():void
+		private function stateHandler(value:String):void
 		{
-			view.show();
+			if (value == State.INTRODUCTION)
+			{
+				view.show();
+			}
 		}
 		
 		private function viewCompleteHandler(event : Event) : void
 		{
 			view.hide();
-			introductionCompleteSignal.dispatch();
+			stateCompleteSignal.dispatch();
 		}
 	}
 }

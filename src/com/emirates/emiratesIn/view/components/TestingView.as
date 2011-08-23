@@ -7,6 +7,7 @@ package com.emirates.emiratesIn.view.components
 	import com.emirates.emiratesIn.display.ui.events.ScreenEvent;
 	import com.emirates.emiratesIn.enum.Dict;
 	import com.emirates.emiratesIn.view.components.events.TestingEvent;
+	import com.emirates.emiratesIn.vo.TestVO;
 
 	import flash.events.Event;
 
@@ -20,13 +21,15 @@ package com.emirates.emiratesIn.view.components
 		private var _testSuccessPopup:Popup = new Popup();
 		private var _testFailPopup:Popup = new Popup();
 		
+		private var _feedback:Boolean = false;
+		
 		public function TestingView()
 		{
 			super();
 			
-			_introScreen.heading = Dict.TRAINING_INTRO_HEADING;
-			_introScreen.body = Dict.TRAINING_INTRO_BODY;
-			_introScreen.button = Dict.TRAINING_INTRO_BUTTON;
+			_introScreen.heading = Dict.TESTING_INTRO_HEADING;
+			_introScreen.body = Dict.TESTING_INTRO_BODY;
+			_introScreen.button = Dict.TESTING_INTRO_BUTTON;
 			_introScreen.addEventListener(ScreenEvent.NEXT, introScreenNextHandler);
 			addChild(_introScreen);
 			
@@ -42,9 +45,9 @@ package com.emirates.emiratesIn.view.components
 			_testSuccessPopup.addEventListener(PopupEvent.COMPLETE, testSuccessPopupComplete);
 			addChild(_testSuccessPopup);
 			
-			_testFailPopup.heading = Dict.TESTING_TEST_SUCCESS_HEADING;
-			_testFailPopup.body = Dict.TESTING_TEST_SUCCESS_BODY;
-			_testFailPopup.button = Dict.TESTING_TEST_SUCCESS_BUTTON;
+			_testFailPopup.heading = Dict.TESTING_TEST_FAIL_HEADING;
+			_testFailPopup.body = Dict.TESTING_TEST_FAIL_BODY;
+			_testFailPopup.button = Dict.TESTING_TEST_FAIL_BUTTON;
 			_testFailPopup.addEventListener(PopupEvent.COMPLETE, testFailPopupComplete);
 			addChild(_testFailPopup);
 		}
@@ -53,14 +56,19 @@ package com.emirates.emiratesIn.view.components
 		{
 			super.show();
 			
+			_introScreen.show();
+		}
+		
+		public function test(vo:TestVO):void
+		{
+			Debug.log(">>> " + vo.type + " : " + vo.hold);
+
 			_testIntroPopup.show();
 		}
 		
-		public function update(value:Array):void
+		public function attention(value:int):void
 		{
-			Debug.log(">>> " + value[0] + " : " + value[1]);
-
-			_testIntroPopup.show();
+			
 		}
 		
 		public function end():void
@@ -68,23 +76,44 @@ package com.emirates.emiratesIn.view.components
 			dispatchEvent(new Event(Event.COMPLETE));
 		}
 		
+		public function success():void
+		{
+			_testSuccessPopup.show();
+		}
+		
+		public function fail():void
+		{
+			_testFailPopup.show();
+		}
+		
 		private function introScreenNextHandler(event : ScreenEvent) : void
 		{
 			_introScreen.hide();
 			
-			next();
+			Debug.log("introScreenNextHandler");
+			
+			dispatchEvent(new TestingEvent(TestingEvent.NEXT));
 		}
 		
 		private function next():void
 		{
-			dispatchEvent(new TestingEvent(TestingEvent.NEXT));
+			if(_feedback)
+			{
+				dispatchEvent(new TestingEvent(TestingEvent.NEXT));
+			}
+			else
+			{
+				dispatchEvent(new TestingEvent(TestingEvent.RETRY));
+			}
+			
+			_feedback = !_feedback;
 		}
 		
 		private function testIntroPopupComplete(event : PopupEvent) : void
 		{
 			_testIntroPopup.hide();
-			
-			next();
+
+			dispatchEvent(new TestingEvent(TestingEvent.START));
 		}
 		
 		private function testSuccessPopupComplete(event : PopupEvent) : void

@@ -37,6 +37,10 @@ package com.emirates.emiratesIn.enum
 		public static const TESTING_INTRO_BODY:String = "Lorem ipsum";
 		public static const TESTING_INTRO_BUTTON:String = "Start";
 		
+		public static const TESTING_TEST_RETRY_HEADING:String = "Retry with feedback";
+		public static const TESTING_TEST_RETRY_BODY:String = "Lorem ipsum";
+		public static const TESTING_TEST_RETRY_BUTTON:String = "Go";
+		
 		public static const TESTING_TEST_INTRO_HEADING:String = "Test";
 		public static const TESTING_TEST_INTRO_BODY:String = "Lorem ipsum";
 		public static const TESTING_TEST_INTRO_BUTTON:String = "Go";
@@ -48,5 +52,9 @@ package com.emirates.emiratesIn.enum
 		public static const TESTING_TEST_FAIL_HEADING:String = "Test Fail";
 		public static const TESTING_TEST_FAIL_BODY:String = "Lorem ipsum";
 		public static const TESTING_TEST_FAIL_BUTTON:String = "Continue";
+		
+		public static const TESTING_TEST_QUESTIONS_HEADING:String = "Questions";
+		public static const TESTING_TEST_QUESTIONS_BODY:String = "Lorem ipsum";
+		public static const TESTING_TEST_QUESTIONS_BUTTON:String = "Continue";
 	}
 }

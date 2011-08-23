@@ -107,6 +107,8 @@ package com.emirates.emiratesIn.view
 		private function testUpdateHandler(vo:ResultVO):void
 		{
 			Debug.log("testUpdateHandler " + vo.attention);
+			
+			view.update(vo);
 		}
 		
 		private function testSuccessHandler():void

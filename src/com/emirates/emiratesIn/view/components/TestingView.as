@@ -1,5 +1,8 @@
 package com.emirates.emiratesIn.view.components
 {
+	import com.emirates.emiratesIn.vo.ResultVO;
+	import flash.desktop.Updater;
+	import com.emirates.emiratesIn.display.ui.Vignette;
 	import com.emirates.emiratesIn.display.ui.Popup;
 	import com.emirates.emiratesIn.display.ui.Screen;
 	import com.emirates.emiratesIn.display.ui.debug.Debug;
@@ -20,12 +23,17 @@ package com.emirates.emiratesIn.view.components
 		private var _testIntroPopup:Popup = new Popup();
 		private var _testSuccessPopup:Popup = new Popup();
 		private var _testFailPopup:Popup = new Popup();
+		private var _testRetryPopup:Popup = new Popup();
+		private var _testQuestionsPopup:Popup = new Popup();
+		private var _vignette:Vignette = new Vignette();
 		
 		private var _feedback:Boolean = false;
 		
 		public function TestingView()
 		{
 			super();
+			
+			addChild(_vignette);
 			
 			_introScreen.heading = Dict.TESTING_INTRO_HEADING;
 			_introScreen.body = Dict.TESTING_INTRO_BODY;
@@ -50,6 +58,18 @@ package com.emirates.emiratesIn.view.components
 			_testFailPopup.button = Dict.TESTING_TEST_FAIL_BUTTON;
 			_testFailPopup.addEventListener(PopupEvent.COMPLETE, testFailPopupComplete);
 			addChild(_testFailPopup);
+			
+			_testRetryPopup.heading = Dict.TESTING_TEST_RETRY_HEADING;
+			_testRetryPopup.body = Dict.TESTING_TEST_RETRY_BODY;
+			_testRetryPopup.button = Dict.TESTING_TEST_RETRY_BUTTON;
+			_testRetryPopup.addEventListener(PopupEvent.COMPLETE, testRetryPopupComplete);
+			addChild(_testRetryPopup);
+			
+			_testQuestionsPopup.heading = Dict.TESTING_TEST_QUESTIONS_HEADING;
+			_testQuestionsPopup.body = Dict.TESTING_TEST_QUESTIONS_BODY;
+			_testQuestionsPopup.button = Dict.TESTING_TEST_QUESTIONS_BUTTON;
+			_testQuestionsPopup.addEventListener(PopupEvent.COMPLETE, testQuestionsPopupComplete);
+			addChild(_testQuestionsPopup);
 		}
 		
 		override public function show() : void
@@ -62,6 +82,8 @@ package com.emirates.emiratesIn.view.components
 		public function test(vo:TestVO):void
 		{
 			Debug.log(">>> " + vo.type + " : " + vo.hold);
+			
+			
 
 			_testIntroPopup.show();
 		}
@@ -69,6 +91,22 @@ package com.emirates.emiratesIn.view.components
 		public function attention(value:int):void
 		{
 			
+		}
+		
+		public function update(vo:ResultVO):void
+		{
+			Debug.log("vo.hit " + vo.hit);
+			
+			_vignette.show();
+			
+			if (vo.hit)
+			{
+				_vignette.animateIn(vo.hold);
+			}
+			else
+			{
+				_vignette.animateOut();
+			}
 		}
 		
 		public function end():void
@@ -97,13 +135,15 @@ package com.emirates.emiratesIn.view.components
 		
 		private function next():void
 		{
+			_vignette.reset();
+			
 			if(_feedback)
 			{
-				dispatchEvent(new TestingEvent(TestingEvent.NEXT));
+				_testQuestionsPopup.show();
 			}
 			else
 			{
-				dispatchEvent(new TestingEvent(TestingEvent.RETRY));
+				_testRetryPopup.show();
 			}
 			
 			_feedback = !_feedback;
@@ -128,6 +168,20 @@ package com.emirates.emiratesIn.view.components
 			_testFailPopup.hide();
 			
 			next();
+		}
+		
+		private function testRetryPopupComplete(event : PopupEvent) : void
+		{
+			_testRetryPopup.hide();
+			
+			dispatchEvent(new TestingEvent(TestingEvent.RETRY));
+		}
+		
+		private function testQuestionsPopupComplete(event : PopupEvent) : void
+		{
+			_testQuestionsPopup.hide();
+			
+			dispatchEvent(new TestingEvent(TestingEvent.NEXT));
 		}
 	}
 }

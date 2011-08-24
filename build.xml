@@ -16,7 +16,7 @@
 
 <project default="1. Cleanup Directories" name="Build IN_USER_TESTING">
 	<!-- Path to Flex 4.1 SDK -->
-	<property name="sdk_dir" value="/Applications/FDT/plugins/flex_sdk_4.1.0.16076" />
+	<property name="sdk_dir" value="/Applications/FDT/plugins/flex_sdk_4.1" />
 	<property name="mxmlc" value="${sdk_dir}/lib/mxmlc.jar" />
 	<property name="adl" value="${sdk_dir}/bin/adl" />
 	<property name="adt" value="${sdk_dir}/lib/adt.jar" />

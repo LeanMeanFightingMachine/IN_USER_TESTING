@@ -8,5 +8,6 @@ package com.emirates.emiratesIn.vo
 		public var type:String;
 		public var hold:int;
 		public var adjust:int;
+		public var feedback:Boolean;
 	}
 }

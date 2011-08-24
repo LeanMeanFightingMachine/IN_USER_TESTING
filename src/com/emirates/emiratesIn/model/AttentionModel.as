@@ -27,9 +27,9 @@ package com.emirates.emiratesIn.model
 			attentionUpdatedSignal.dispatch(value);
 		}
 		
-		public function getRaw() : Number
+		public function getRaw() : int
 		{
-			return _total / _count;
+			return _current;
 		}
 		
 		public function getOverallAverage() : Number

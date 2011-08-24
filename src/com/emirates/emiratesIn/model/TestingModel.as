@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn.model
 {
+	import com.emirates.emiratesIn.enum.Test;
 	import com.emirates.emiratesIn.controller.signals.NoTestsSignal;
 	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import com.emirates.emiratesIn.vo.TestVO;
@@ -32,17 +33,25 @@ package com.emirates.emiratesIn.model
 			{
 				for (var j : int = 0; j < Config.TESTING_HOLD.length; j++)
 				{
-					for (var k : int = 0; k < Config.TESTING_LEVELS; k++)
+					var st : int = 0;
+					if (Config.TESTING_TESTS[i] == Test.ENTRY) st = 1;
+					
+					for (var k : int = st; k < Config.TESTING_LEVELS; k++)
 					{
-						testVO = new TestVO();
-						testVO.type = Config.TESTING_TESTS[i];
-						testVO.hold = Config.TESTING_HOLD[j];
-						testVO.adjust = k * Config.TESTING_INCREMENT;
-						
-						_order.push(testVO);
+						for (var l : int = 0; l < 2; l++)
+						{
+							testVO = new TestVO();
+							testVO.type = Config.TESTING_TESTS[i];
+							testVO.hold = Config.TESTING_HOLD[j];
+							testVO.adjust = k * Config.TESTING_INCREMENT;
+							testVO.feedback = (l == 0);
+							_order.push(testVO);
+						}
 					}
 				}
 			}
+			
+			Debug.log("No. tests: " + _order.length);
 			
 			ArrayUtil.shuffle(_order);
 			

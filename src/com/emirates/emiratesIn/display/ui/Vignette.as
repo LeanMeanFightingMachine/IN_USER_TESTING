@@ -2,12 +2,22 @@ package com.emirates.emiratesIn.display.ui
 {
 	import com.greensock.TweenMax;
 
+	import flash.display.GradientType;
+	import flash.display.SpreadMethod;
+	import flash.geom.Matrix;
+
 	/**
 	 * @author Fraser Hobbs
 	 */
 	public class Vignette extends Clip
 	{
-		private var _growing:Boolean = false;
+		private static const FADE_DISTANCE:int = 50;
+		
+		public var scale:Number = 1;
+		
+		private var _growing : Boolean = false;
+		private var _inner : Number = 255 - FADE_DISTANCE;
+		private var _outer:Number = 255;
 		
 		public function Vignette()
 		{
@@ -16,8 +26,10 @@ package com.emirates.emiratesIn.display.ui
 		
 		public function reset():void
 		{
-			scaleX = 1;
-			scaleY = 1;
+			scale = 1;
+			scaleUpdate();
+			
+			_growing = false;
 			
 			hide();
 		}
@@ -29,7 +41,7 @@ package com.emirates.emiratesIn.display.ui
 				_growing = true;
 					
 				TweenMax.killTweensOf(this);
-				TweenMax.to(this, duration, {scaleX:0, scaleY:0});
+				TweenMax.to(this, duration, {scale:0, onUpdate:scaleUpdate});
 			}
 		}
 		
@@ -40,21 +52,47 @@ package com.emirates.emiratesIn.display.ui
 				_growing = false;
 				
 				TweenMax.killTweensOf(this);
-				TweenMax.to(this, 1, {scaleX:1, scaleY:1});
+				TweenMax.to(this, 1, {scale:1, onUpdate:scaleUpdate});
 			}
+		}
+		
+		public function stop():void
+		{
+			TweenMax.killTweensOf(this);
 		}
 			
 		override protected function resize() : void
 		{
 			super.resize();
 			
-			x = int(stage.stageWidth * 0.5);
-			y = int(stage.stageHeight * 0.5);
+			update();
+		}
+			
+		override protected function draw() : void
+		{
+			super.draw();
+			
+			var w:int = stage.stageWidth;
+			var h:int = stage.stageHeight;
+			
+			var colours:Array = [0x000000,0x000000];
+			var alphas : Array = [0, 1];
+			var ratios : Array = [_inner, _outer];
+			var matrix : Matrix = new Matrix();
+			matrix.createGradientBox(w, h);
 			
 			graphics.clear();
-			graphics.beginFill(0x000000);
-			graphics.drawEllipse(-int(stage.stageWidth * 0.5), -int(stage.stageHeight * 0.5), stage.stageWidth, stage.stageHeight);
+			graphics.lineStyle();
+			graphics.beginGradientFill(GradientType.RADIAL, colours, alphas, ratios, matrix, SpreadMethod.PAD);
+			graphics.drawRect(0, 0, w, h);
 			graphics.endFill();
+		}
+		
+		private function scaleUpdate():void
+		{
+			_outer = 255 * scale;
+			_inner = _outer - FADE_DISTANCE;
+			_inner = _inner < 0 ? 0 : _inner;
 			
 			update();
 		}

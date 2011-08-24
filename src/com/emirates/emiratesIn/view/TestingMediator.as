@@ -2,7 +2,7 @@ package com.emirates.emiratesIn.view
 {
 	import com.emirates.emiratesIn.controller.signals.TestRetrySignal;
 	import com.emirates.emiratesIn.display.ui.debug.Debug;
-	import com.emirates.emiratesIn.vo.ResultVO;
+	import com.emirates.emiratesIn.vo.HotspotVO;
 	import com.emirates.emiratesIn.controller.signals.TestUpdateSignal;
 	import com.emirates.emiratesIn.vo.TestVO;
 	import com.emirates.emiratesIn.controller.signals.AttentionUpdateSignal;
@@ -104,7 +104,7 @@ package com.emirates.emiratesIn.view
 			view.end();
 		}
 		
-		private function testUpdateHandler(vo:ResultVO):void
+		private function testUpdateHandler(vo:HotspotVO):void
 		{
 			Debug.log("testUpdateHandler " + vo.attention);
 			

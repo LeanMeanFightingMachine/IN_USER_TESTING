@@ -1,15 +1,18 @@
 package com.emirates.emiratesIn.view.components
 {
-	import com.emirates.emiratesIn.vo.ResultVO;
-	import flash.desktop.Updater;
-	import com.emirates.emiratesIn.display.ui.Vignette;
+	import com.emirates.emiratesIn.display.ui.QuestionScreen;
+	import com.emirates.emiratesIn.display.ui.Feedback;
+	import com.emirates.emiratesIn.enum.Config;
 	import com.emirates.emiratesIn.display.ui.Popup;
 	import com.emirates.emiratesIn.display.ui.Screen;
+	import com.emirates.emiratesIn.display.ui.Vignette;
 	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import com.emirates.emiratesIn.display.ui.events.PopupEvent;
 	import com.emirates.emiratesIn.display.ui.events.ScreenEvent;
 	import com.emirates.emiratesIn.enum.Dict;
+	import com.emirates.emiratesIn.enum.Test;
 	import com.emirates.emiratesIn.view.components.events.TestingEvent;
+	import com.emirates.emiratesIn.vo.HotspotVO;
 	import com.emirates.emiratesIn.vo.TestVO;
 
 	import flash.events.Event;
@@ -24,16 +27,19 @@ package com.emirates.emiratesIn.view.components
 		private var _testSuccessPopup:Popup = new Popup();
 		private var _testFailPopup:Popup = new Popup();
 		private var _testRetryPopup:Popup = new Popup();
-		private var _testQuestionsPopup:Popup = new Popup();
+		private var _testQuestionsScreen:QuestionScreen = new QuestionScreen();
 		private var _vignette:Vignette = new Vignette();
+		private var _feedback:Feedback = new Feedback();
 		
-		private var _feedback:Boolean = false;
+		private var _feedbackOn:Boolean;
 		
 		public function TestingView()
 		{
 			super();
-			
+
 			addChild(_vignette);
+			
+			addChild(_feedback);
 			
 			_introScreen.heading = Dict.TESTING_INTRO_HEADING;
 			_introScreen.body = Dict.TESTING_INTRO_BODY;
@@ -65,11 +71,15 @@ package com.emirates.emiratesIn.view.components
 			_testRetryPopup.addEventListener(PopupEvent.COMPLETE, testRetryPopupComplete);
 			addChild(_testRetryPopup);
 			
-			_testQuestionsPopup.heading = Dict.TESTING_TEST_QUESTIONS_HEADING;
-			_testQuestionsPopup.body = Dict.TESTING_TEST_QUESTIONS_BODY;
-			_testQuestionsPopup.button = Dict.TESTING_TEST_QUESTIONS_BUTTON;
-			_testQuestionsPopup.addEventListener(PopupEvent.COMPLETE, testQuestionsPopupComplete);
-			addChild(_testQuestionsPopup);
+			_testQuestionsScreen.heading = Dict.TESTING_TEST_QUESTIONS_HEADING;
+			_testQuestionsScreen.body = Dict.TESTING_TEST_QUESTIONS_BODY;
+			_testQuestionsScreen.button = Dict.TESTING_TEST_QUESTIONS_BUTTON;
+			for (var i : int = 0; i < Config.TESTING_QUESTIONS.length; i++)
+			{
+				_testQuestionsScreen.ask(Config.TESTING_QUESTIONS[i]["question"], Config.TESTING_QUESTIONS[i]["answers"]);
+			}
+			_testQuestionsScreen.addEventListener(ScreenEvent.NEXT, testQuestionsPopupComplete);
+			addChild(_testQuestionsScreen);
 		}
 		
 		override public function show() : void
@@ -83,8 +93,28 @@ package com.emirates.emiratesIn.view.components
 		{
 			Debug.log(">>> " + vo.type + " : " + vo.hold);
 			
-			
+			switch(vo.type)
+			{
+				case Test.SET:
+					_testIntroPopup.heading = "Test: Set Level";
+					_testIntroPopup.body = "Hold at " + (Config.TESTING_BASE + vo.adjust) + "% attention for " + vo.hold + " secs";
+				break;
+				case Test.ENTRY:
+					_testIntroPopup.heading = "Test: Entry Level";
+					_testIntroPopup.body = "Hold at entry level plus " + vo.adjust + "% attention for " + vo.hold + " secs";
+				break;
+				case Test.OVERALL_AVERAGE:
+					_testIntroPopup.heading = "Test: Overall Average";
+					_testIntroPopup.body = "Hold at overall average level plus " + vo.adjust + "% attention for " + vo.hold + " secs";
+				break;
+				case Test.SAMPLE_AVERAGE:
+					_testIntroPopup.heading = "Test: Sample Average";
+					_testIntroPopup.body = "Hold at sample average level plus " + vo.adjust + "% attention for " + vo.hold + " secs";
+				break;
+			}
 
+			_feedbackOn = vo.feedback;
+			
 			_testIntroPopup.show();
 		}
 		
@@ -93,11 +123,16 @@ package com.emirates.emiratesIn.view.components
 			
 		}
 		
-		public function update(vo:ResultVO):void
+		public function update(vo:HotspotVO):void
 		{
-			Debug.log("vo.hit " + vo.hit);
-			
 			_vignette.show();
+
+			if (_feedbackOn)
+			{
+				_feedback.show();
+				_feedback.target(vo.target);
+				_feedback.attention(vo.attention);
+			}
 			
 			if (vo.hit)
 			{
@@ -122,6 +157,7 @@ package com.emirates.emiratesIn.view.components
 		public function fail():void
 		{
 			_testFailPopup.show();
+			_vignette.stop();
 		}
 		
 		private function introScreenNextHandler(event : ScreenEvent) : void
@@ -135,18 +171,10 @@ package com.emirates.emiratesIn.view.components
 		
 		private function next():void
 		{
+			_feedback.reset();
 			_vignette.reset();
 			
-			if(_feedback)
-			{
-				_testQuestionsPopup.show();
-			}
-			else
-			{
-				_testRetryPopup.show();
-			}
-			
-			_feedback = !_feedback;
+			_testQuestionsScreen.show();
 		}
 		
 		private function testIntroPopupComplete(event : PopupEvent) : void
@@ -177,9 +205,9 @@ package com.emirates.emiratesIn.view.components
 			dispatchEvent(new TestingEvent(TestingEvent.RETRY));
 		}
 		
-		private function testQuestionsPopupComplete(event : PopupEvent) : void
+		private function testQuestionsPopupComplete(event : ScreenEvent) : void
 		{
-			_testQuestionsPopup.hide();
+			_testQuestionsScreen.hide();
 			
 			dispatchEvent(new TestingEvent(TestingEvent.NEXT));
 		}

@@ -16,11 +16,13 @@ package com.emirates.emiratesIn.enum
 		
 		public static const TESTING_HOLD : Array = [0,1,2,3,4,5];
 		public static const TESTING_TESTS:Array = [Test.SET,Test.ENTRY,Test.OVERALL_AVERAGE,Test.SAMPLE_AVERAGE];
+		//public static const TESTING_TESTS : Array = [Test.ENTRY];
 		public static const TESTING_BASE:int = 50;
 		public static const TESTING_INCREMENT:int = 10;
 		public static const TESTING_LEVELS:int = 3;
 		public static const TESTING_SAMPLE_SIZE:int = 100;
 		public static const TESTING_DURATION:int = 10;
-		public static const TESTING_HOTSPOT_MAX_DELAY:int = 5;
+		public static const TESTING_HOTSPOT_MAX_DELAY : int = 5;
+		public static const TESTING_QUESTIONS : Array = [Questions.DIFFICULTY, Questions.CONTROL, Questions.FEEDBACK];
 	}
 }

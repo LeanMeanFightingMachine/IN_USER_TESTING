@@ -1,12 +1,13 @@
 package com.emirates.emiratesIn.model
 {
+	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import com.emirates.emiratesIn.controller.signals.TestFailSignal;
 	import com.emirates.emiratesIn.controller.signals.TestSuccessSignal;
 	import com.emirates.emiratesIn.controller.signals.TestUpdateSignal;
 	import com.emirates.emiratesIn.enum.Config;
 	import com.emirates.emiratesIn.enum.Test;
 	import com.emirates.emiratesIn.vo.AttentionVO;
-	import com.emirates.emiratesIn.vo.ResultVO;
+	import com.emirates.emiratesIn.vo.HotspotVO;
 	import com.emirates.emiratesIn.vo.TestVO;
 
 	import org.robotlegs.mvcs.Actor;
@@ -41,6 +42,8 @@ package com.emirates.emiratesIn.model
 		private var _target:Number;
 		private var _on:Boolean = false;
 		
+		private var _attention:AttentionVO;
+		
 		public function TestModel()
 		{
 			_testTimer.addEventListener(TimerEvent.TIMER_COMPLETE, testTimerCompleteHandler);
@@ -59,21 +62,7 @@ package com.emirates.emiratesIn.model
 		
 		public function start(attention:AttentionVO):void
 		{
-			switch(_type)
-			{
-				case Test.SET :
-					_target = Config.TESTING_BASE + _adjust;
-				break;
-				case Test.ENTRY :
-					_target = attention.raw + _adjust;
-				break;
-				case Test.OVERALL_AVERAGE :
-					_target = attention.overallAverage + _adjust;
-				break;
-				case Test.SAMPLE_AVERAGE :
-					_target = attention.sampleAverage + _adjust;
-				break;
-			}
+			_attention = attention;
 			
 			_holdTimer.delay = _hold * 1000;
 			
@@ -86,11 +75,16 @@ package com.emirates.emiratesIn.model
 		
 		public function update(attention:AttentionVO):void
 		{
+			_attention = attention;
+			
 			if(_on)
 			{
-				var result : ResultVO = new ResultVO();
+				var result : HotspotVO = new HotspotVO();
 				result.attention = attention.raw;
 				result.hold = _hold;
+				result.target = _target;
+
+				Debug.log("attention: " + attention.raw + " target: " + _target);
 				
 				if (attention.raw >= _target)
 				{
@@ -98,6 +92,11 @@ package com.emirates.emiratesIn.model
 					
 					if(_hold == 0)
 					{
+						_on = false;
+			
+						_testTimer.reset();
+						_holdTimer.reset();
+						
 						testSuccessSignal.dispatch();
 					}
 					else if(!_holdTimer.running)
@@ -125,11 +124,34 @@ package com.emirates.emiratesIn.model
 			}
 		}
 		
-		private function delayTimerCompleteHandler(event : TimerEvent) : void
+		private function hotspot():void
 		{
+			switch(_type)
+			{
+				case Test.SET :
+					_target = Config.TESTING_BASE + _adjust;
+				break;
+				case Test.ENTRY :
+					_target = _attention.raw + _adjust;
+				break;
+				case Test.OVERALL_AVERAGE :
+					_target = _attention.overallAverage + _adjust;
+				break;
+				case Test.SAMPLE_AVERAGE :
+					_target = _attention.sampleAverage + _adjust;
+				break;
+			}
+
+			if (_target > 100) _target = 100;
+			
 			_testTimer.start();
 			
 			_on = true;
+		}
+		
+		private function delayTimerCompleteHandler(event : TimerEvent) : void
+		{
+			hotspot();
 		}
 		
 		private function testTimerCompleteHandler(event : TimerEvent) : void

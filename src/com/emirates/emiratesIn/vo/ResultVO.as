@@ -1,13 +1,16 @@
 package com.emirates.emiratesIn.vo
 {
 	/**
-	 * @author Fraser Hobbs
+	 * @author fraserhobbs
 	 */
 	public class ResultVO
 	{
-		public var attention:int;
-		public var hit:Boolean;
-		public var held:Number;
-		public var hold:Number;
+		public var type:String;
+		public var level:int;
+		public var hold:int;
+		public var position:int;
+		public var target:int;
+		public var quantative:ResultQuantativeVO = new ResultQuantativeVO();
+		public var qualative:ResultQualativeVO = new ResultQualativeVO();
 	}
 }

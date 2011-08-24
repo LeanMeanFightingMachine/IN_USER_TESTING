@@ -15,6 +15,7 @@ package com.emirates.emiratesIn.display.ui
 		protected var _bodyText:TextField;
 		protected var _bodyFormat:TextFormat;
 		protected var _button:PopupButton;
+		protected var _contentHeight:int;
 		
 		public function Screen()
 		{
@@ -89,6 +90,8 @@ package com.emirates.emiratesIn.display.ui
 			_bodyText.width = stage.stageWidth - 40;
 			
 			_bodyText.y = _headingText.y + _headingText.height + 20;
+
+			_contentHeight = _bodyText.y + _bodyText.height;
 			
 			_button.x = stage.stageWidth - _button.width - 20;
 			_button.y = stage.stageHeight - _button.height - 20;

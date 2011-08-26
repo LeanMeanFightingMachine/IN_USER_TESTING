@@ -1,6 +1,6 @@
 package com.emirates.emiratesIn.display.ui
 {
-	import com.emirates.emiratesIn.display.ui.debug.Debug;
+	import com.emirates.emiratesIn.vo.ResultQualativeAnswerVO;
 
 	/**
 	 * @author fraserhobbs
@@ -24,14 +24,30 @@ package com.emirates.emiratesIn.display.ui
 			}
 		}
 		
-		public function ask(question:String, answers:Array):void
+		public function ask(id:int, question:String, answers:Array):void
 		{
-			var q:Question = new Question(question, answers);
+			var q:Question = new Question(id, question, answers);
 			q.x = 20;
 			addChild(q);
 			_questions.push(q);
 			
 			update();
+		}
+		
+		public function get answers():Vector.<ResultQualativeAnswerVO>
+		{
+			var ans:Vector.<ResultQualativeAnswerVO> = new Vector.<ResultQualativeAnswerVO>();
+			var an:ResultQualativeAnswerVO;
+			
+			for (var i : int = 0; i < _questions.length; i++)
+			{
+				an = new ResultQualativeAnswerVO();
+				an.questionID = _questions[i].id;
+				an.answerID = _questions[i].answer;
+				ans.push(an);
+			}
+			
+			return ans;
 		}
 			
 		override protected function draw() : void

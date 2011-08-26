@@ -5,10 +5,7 @@ package com.emirates.emiratesIn.vo
 	 */
 	public class HotspotVO
 	{
-		public var attention:int;
-		public var hit:Boolean;
-		public var held:Number;
-		public var hold:Number;
 		public var target:int;
+		public var time:int;
 	}
 }

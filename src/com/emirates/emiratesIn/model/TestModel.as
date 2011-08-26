@@ -1,5 +1,7 @@
 package com.emirates.emiratesIn.model
 {
+	import com.emirates.emiratesIn.vo.HotspotVO;
+	import com.emirates.emiratesIn.controller.signals.TestHotspotSignal;
 	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import com.emirates.emiratesIn.controller.signals.TestFailSignal;
 	import com.emirates.emiratesIn.controller.signals.TestSuccessSignal;
@@ -7,7 +9,7 @@ package com.emirates.emiratesIn.model
 	import com.emirates.emiratesIn.enum.Config;
 	import com.emirates.emiratesIn.enum.Test;
 	import com.emirates.emiratesIn.vo.AttentionVO;
-	import com.emirates.emiratesIn.vo.HotspotVO;
+	import com.emirates.emiratesIn.vo.UpdateVO;
 	import com.emirates.emiratesIn.vo.TestVO;
 
 	import org.robotlegs.mvcs.Actor;
@@ -30,10 +32,15 @@ package com.emirates.emiratesIn.model
 		[Inject]
 		public var testFailSignal:TestFailSignal;
 		
+		[Inject]
+		public var hotspotSignal:TestHotspotSignal;
+		
 		private var _delayTimer:Timer = new Timer(0,1);
 		private var _testTimer:Timer = new Timer(Config.TESTING_DURATION * 1000, 1);
 		private var _holdTimer:Timer = new Timer(0,1);
 		private var _holdStamp:Number;
+		private var _hotspotStamp:Number;
+		private var _startStamp:Number;
 		
 		private var _type:String;
 		private var _hold:int;
@@ -64,6 +71,8 @@ package com.emirates.emiratesIn.model
 		{
 			_attention = attention;
 			
+			_startStamp = getTimer();
+			
 			_holdTimer.delay = _hold * 1000;
 			
 			_testTimer.reset();
@@ -77,18 +86,20 @@ package com.emirates.emiratesIn.model
 		{
 			_attention = attention;
 			
-			if(_on)
-			{
-				var result : HotspotVO = new HotspotVO();
-				result.attention = attention.raw;
-				result.hold = _hold;
-				result.target = _target;
-
+			//if(_on)
+			//{
+				var update : UpdateVO = new UpdateVO();
+				update.attention = attention.raw;
+				update.hold = _hold;
+				update.target = _target;
+				update.hotspot = _on;
+				update.time = getTimer() - _startStamp;
+				
 				Debug.log("attention: " + attention.raw + " target: " + _target);
 				
 				if (attention.raw >= _target)
 				{
-					result.hit = true;
+					update.hit = true;
 					
 					if(_hold == 0)
 					{
@@ -103,16 +114,16 @@ package com.emirates.emiratesIn.model
 					{
 						_holdStamp = getTimer();
 						_holdTimer.start();
-						result.held = 0;
+						update.held = 0;
 					}
 					else
 					{
-						result.held = getTimer() - _holdStamp;
+						update.held = getTimer() - _holdStamp;
 					}
 				}
 				else
 				{
-					result.hit = false;
+					update.hit = false;
 					
 					if(_holdTimer.running)
 					{
@@ -120,12 +131,14 @@ package com.emirates.emiratesIn.model
 					}
 				}
 	
-				testUpdateSignal.dispatch(result);
-			}
+				testUpdateSignal.dispatch(update);
+			//}
 		}
 		
 		private function hotspot():void
 		{
+			_hotspotStamp = getTimer();
+			
 			switch(_type)
 			{
 				case Test.SET :
@@ -147,6 +160,11 @@ package com.emirates.emiratesIn.model
 			_testTimer.start();
 			
 			_on = true;
+
+			var vo : HotspotVO = new HotspotVO();
+			vo.target = _target;
+			vo.time = _holdTimer.delay;
+			hotspotSignal.dispatch(vo);
 		}
 		
 		private function delayTimerCompleteHandler(event : TimerEvent) : void
@@ -171,7 +189,7 @@ package com.emirates.emiratesIn.model
 			_testTimer.reset();
 			_holdTimer.reset();
 			
-			testSuccessSignal.dispatch();
+			testSuccessSignal.dispatch(getTimer() - _hotspotStamp);
 		}
 	}
 }

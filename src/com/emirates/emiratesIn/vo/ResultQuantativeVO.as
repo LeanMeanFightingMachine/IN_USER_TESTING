@@ -5,7 +5,9 @@ package com.emirates.emiratesIn.vo
 	 */
 	public class ResultQuantativeVO
 	{
-		public var data:Vector.<int> = new Vector.<int>();
-		public var duration:int = -1;
+		public var data:Vector.<ResultAttentionVO> = new Vector.<ResultAttentionVO>();
+		public var completedTime:int = -1;
+		public var target:int;
+		public var startTime:int;
 	}
 }

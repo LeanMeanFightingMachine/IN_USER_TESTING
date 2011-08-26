@@ -9,6 +9,7 @@ package com.emirates.emiratesIn.controller.signals
 	{
 		public function TestSuccessSignal()
 		{
+			super(int);
 		}
 	}
 }

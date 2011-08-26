@@ -44,6 +44,7 @@ package com.emirates.emiratesIn.model
 							testVO.type = Config.TESTING_TESTS[i];
 							testVO.hold = Config.TESTING_HOLD[j];
 							testVO.adjust = k * Config.TESTING_INCREMENT;
+							testVO.level = k;
 							testVO.feedback = (l == 0);
 							_order.push(testVO);
 						}

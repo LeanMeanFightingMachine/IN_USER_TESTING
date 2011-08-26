@@ -1,13 +1,15 @@
 package com.emirates.emiratesIn
 {
-	import com.emirates.emiratesIn.controller.commands.TestRetryCommand;
 	import com.emirates.emiratesIn.controller.commands.AttentionUpdateCommand;
 	import com.emirates.emiratesIn.controller.commands.GotNextStateCommand;
 	import com.emirates.emiratesIn.controller.commands.GotNextTestCommand;
 	import com.emirates.emiratesIn.controller.commands.StartupCommand;
 	import com.emirates.emiratesIn.controller.commands.StateCompleteCommand;
 	import com.emirates.emiratesIn.controller.commands.TestCompleteCommand;
+	import com.emirates.emiratesIn.controller.commands.TestHotspotCommand;
+	import com.emirates.emiratesIn.controller.commands.TestRetryCommand;
 	import com.emirates.emiratesIn.controller.commands.TestStartCommand;
+	import com.emirates.emiratesIn.controller.commands.TestUpdateCommand;
 	import com.emirates.emiratesIn.controller.signals.AttentionUpdateSignal;
 	import com.emirates.emiratesIn.controller.signals.GotNextStateSignal;
 	import com.emirates.emiratesIn.controller.signals.GotNextTestSignal;
@@ -15,6 +17,7 @@ package com.emirates.emiratesIn
 	import com.emirates.emiratesIn.controller.signals.StateCompleteSignal;
 	import com.emirates.emiratesIn.controller.signals.TestCompleteSignal;
 	import com.emirates.emiratesIn.controller.signals.TestFailSignal;
+	import com.emirates.emiratesIn.controller.signals.TestHotspotSignal;
 	import com.emirates.emiratesIn.controller.signals.TestRetrySignal;
 	import com.emirates.emiratesIn.controller.signals.TestStartSignal;
 	import com.emirates.emiratesIn.controller.signals.TestSuccessSignal;
@@ -73,7 +76,7 @@ package com.emirates.emiratesIn
 			injector.mapSingleton(TestUpdateSignal);
 			injector.mapSingleton(TestSuccessSignal);
 			injector.mapSingleton(TestFailSignal);
-			
+			injector.mapSingleton(TestHotspotSignal);
 			injector.mapSingleton(GotNextStateSignal);
 			injector.mapSingleton(StateCompleteSignal);
 			
@@ -84,6 +87,8 @@ package com.emirates.emiratesIn
 			signalCommandMap.mapSignalClass(GotNextTestSignal, GotNextTestCommand);
 			signalCommandMap.mapSignalClass(TestStartSignal, TestStartCommand);
 			signalCommandMap.mapSignalClass(TestRetrySignal, TestRetryCommand);
+			signalCommandMap.mapSignalClass(TestHotspotSignal, TestHotspotCommand);
+			signalCommandMap.mapSignalClass(TestUpdateSignal, TestUpdateCommand);
 
 			// Views
 			mediatorMap.mapView(IntroductionView, IntroductionMediator);

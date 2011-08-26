@@ -1,7 +1,9 @@
 package com.emirates.emiratesIn.model
 {
+	import com.emirates.emiratesIn.vo.ResultAttentionVO;
 	import com.emirates.emiratesIn.vo.ResultQualativeAnswerVO;
 	import com.emirates.emiratesIn.vo.ResultVO;
+
 	import org.robotlegs.mvcs.Actor;
 
 	/**
@@ -11,6 +13,7 @@ package com.emirates.emiratesIn.model
 	{
 		private var _results:Vector.<ResultVO> = new Vector.<ResultVO>();
 		private var _result:ResultVO;
+		private var _position:int;
 		
 		public function ResultsModel()
 		{
@@ -20,20 +23,30 @@ package com.emirates.emiratesIn.model
 		public function add():void
 		{
 			_result = new ResultVO();
+			_result.position = _position;
 			_results.push(_result);
-		}
-		
-		public function addAttention():void
-		{
 			
+			_position++;
 		}
 		
-		public function addAnswer(question:int, answer:int):void
+		public function addAttention(value:ResultAttentionVO):void
 		{
-			var an : ResultQualativeAnswerVO = new ResultQualativeAnswerVO();
-			an.questionID = question;
-			an.answerID = answer;
-			_result.qualative.answers.push(an);
+			_result.quantative.data.push(value);
+		}
+		
+		public function set answers(value:Vector.<ResultQualativeAnswerVO>):void
+		{
+			_result.qualative.answers = value;
+		}
+		
+		public function set feedback(value:Boolean):void
+		{
+			_result.feedback = value;
+		}
+		
+		public function set startTime(value:int):void
+		{
+			_result.quantative.startTime = value;
 		}
 		
 		public function set type(value:String):void
@@ -46,19 +59,24 @@ package com.emirates.emiratesIn.model
 			_result.level = value;
 		}
 		
+		public function set adjust(value:int):void
+		{
+			_result.adjust = value;
+		}
+		
 		public function set hold(value:int):void
 		{
 			_result.hold = value;
 		}
 		
-		public function set position(value:int):void
+		public function set completedTime(value:int):void
 		{
-			_result.position = value;
+			_result.quantative.completedTime = value;
 		}
 		
 		public function set target(value:int):void
 		{
-			_result.target = value;
+			_result.quantative.target = value;
 		}
 	}
 }

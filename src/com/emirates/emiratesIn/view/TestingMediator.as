@@ -1,10 +1,6 @@
 package com.emirates.emiratesIn.view
 {
-	import com.emirates.emiratesIn.controller.signals.TestRetrySignal;
-	import com.emirates.emiratesIn.display.ui.debug.Debug;
-	import com.emirates.emiratesIn.vo.HotspotVO;
-	import com.emirates.emiratesIn.controller.signals.TestUpdateSignal;
-	import com.emirates.emiratesIn.vo.TestVO;
+	import com.emirates.emiratesIn.controller.signals.TestHotspotSignal;
 	import com.emirates.emiratesIn.controller.signals.AttentionUpdateSignal;
 	import com.emirates.emiratesIn.controller.signals.GotNextStateSignal;
 	import com.emirates.emiratesIn.controller.signals.GotNextTestSignal;
@@ -12,11 +8,17 @@ package com.emirates.emiratesIn.view
 	import com.emirates.emiratesIn.controller.signals.StateCompleteSignal;
 	import com.emirates.emiratesIn.controller.signals.TestCompleteSignal;
 	import com.emirates.emiratesIn.controller.signals.TestFailSignal;
+	import com.emirates.emiratesIn.controller.signals.TestRetrySignal;
 	import com.emirates.emiratesIn.controller.signals.TestStartSignal;
 	import com.emirates.emiratesIn.controller.signals.TestSuccessSignal;
+	import com.emirates.emiratesIn.controller.signals.TestUpdateSignal;
+	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import com.emirates.emiratesIn.enum.State;
+	import com.emirates.emiratesIn.model.ResultsModel;
 	import com.emirates.emiratesIn.view.components.TestingView;
 	import com.emirates.emiratesIn.view.components.events.TestingEvent;
+	import com.emirates.emiratesIn.vo.TestVO;
+	import com.emirates.emiratesIn.vo.UpdateVO;
 
 	import org.robotlegs.mvcs.Mediator;
 
@@ -29,6 +31,9 @@ package com.emirates.emiratesIn.view
 	{
 		[Inject]
 		public var view:TestingView;
+		
+		[Inject]
+		public var resultsModel:ResultsModel;
 		
 		[Inject]
 		public var nextStateSignal : GotNextStateSignal;
@@ -63,6 +68,9 @@ package com.emirates.emiratesIn.view
 		[Inject]
 		public var testUpdateSignal:TestUpdateSignal;
 		
+		[Inject]
+		public var testHotspotSignal:TestHotspotSignal;
+		
 		public function TestingMediator()
 		{
 			super();
@@ -76,6 +84,7 @@ package com.emirates.emiratesIn.view
 			noTestsSignal.add( noTestsSignalHandler );
 			attentionUpdatedSignal.add( attentionUpdatedHandler );
 			testUpdateSignal.add( testUpdateHandler );
+			testHotspotSignal.add(testHotspotHandler);
 			
 			testFailSignal.add( testFailHandler );
 			testSuccessSignal.add( testSuccessHandler );
@@ -104,7 +113,7 @@ package com.emirates.emiratesIn.view
 			view.end();
 		}
 		
-		private function testUpdateHandler(vo:HotspotVO):void
+		private function testUpdateHandler(vo:UpdateVO):void
 		{
 			Debug.log("testUpdateHandler " + vo.attention);
 			
@@ -124,6 +133,11 @@ package com.emirates.emiratesIn.view
 			view.fail();
 		}
 		
+		private function testHotspotHandler():void
+		{
+			view.hotspot();
+		}
+		
 		private function attentionUpdatedHandler(value:int):void
 		{
 			view.attention(value);
@@ -131,6 +145,8 @@ package com.emirates.emiratesIn.view
 		
 		private function testingNextHandler(event : TestingEvent) : void
 		{
+			resultsModel.answers = view.answers;
+			
 			testCompleteSignal.dispatch();
 		}
 		

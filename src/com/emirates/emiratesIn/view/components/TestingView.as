@@ -1,19 +1,20 @@
 package com.emirates.emiratesIn.view.components
 {
-	import com.emirates.emiratesIn.display.ui.QuestionScreen;
 	import com.emirates.emiratesIn.display.ui.Feedback;
-	import com.emirates.emiratesIn.enum.Config;
 	import com.emirates.emiratesIn.display.ui.Popup;
+	import com.emirates.emiratesIn.display.ui.QuestionScreen;
 	import com.emirates.emiratesIn.display.ui.Screen;
 	import com.emirates.emiratesIn.display.ui.Vignette;
 	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import com.emirates.emiratesIn.display.ui.events.PopupEvent;
 	import com.emirates.emiratesIn.display.ui.events.ScreenEvent;
+	import com.emirates.emiratesIn.enum.Config;
 	import com.emirates.emiratesIn.enum.Dict;
 	import com.emirates.emiratesIn.enum.Test;
 	import com.emirates.emiratesIn.view.components.events.TestingEvent;
-	import com.emirates.emiratesIn.vo.HotspotVO;
+	import com.emirates.emiratesIn.vo.ResultQualativeAnswerVO;
 	import com.emirates.emiratesIn.vo.TestVO;
+	import com.emirates.emiratesIn.vo.UpdateVO;
 
 	import flash.events.Event;
 
@@ -76,7 +77,7 @@ package com.emirates.emiratesIn.view.components
 			_testQuestionsScreen.button = Dict.TESTING_TEST_QUESTIONS_BUTTON;
 			for (var i : int = 0; i < Config.TESTING_QUESTIONS.length; i++)
 			{
-				_testQuestionsScreen.ask(Config.TESTING_QUESTIONS[i]["question"], Config.TESTING_QUESTIONS[i]["answers"]);
+				_testQuestionsScreen.ask(Config.TESTING_QUESTIONS[i]["id"], Config.TESTING_QUESTIONS[i]["question"], Config.TESTING_QUESTIONS[i]["answers"]);
 			}
 			_testQuestionsScreen.addEventListener(ScreenEvent.NEXT, testQuestionsPopupComplete);
 			addChild(_testQuestionsScreen);
@@ -123,25 +124,31 @@ package com.emirates.emiratesIn.view.components
 			
 		}
 		
-		public function update(vo:HotspotVO):void
+		public function update(vo:UpdateVO):void
+		{
+			if (vo.hotspot)
+			{
+				if (_feedbackOn)
+				{
+					_feedback.show();
+					_feedback.target(vo.target);
+					_feedback.attention(vo.attention);
+				}
+				
+				if (vo.hit)
+				{
+					_vignette.animateIn(vo.hold);
+				}
+				else
+				{
+					_vignette.animateOut();
+				}
+			}
+		}
+		
+		public function hotspot():void
 		{
 			_vignette.show();
-
-			if (_feedbackOn)
-			{
-				_feedback.show();
-				_feedback.target(vo.target);
-				_feedback.attention(vo.attention);
-			}
-			
-			if (vo.hit)
-			{
-				_vignette.animateIn(vo.hold);
-			}
-			else
-			{
-				_vignette.animateOut();
-			}
 		}
 		
 		public function end():void
@@ -158,6 +165,11 @@ package com.emirates.emiratesIn.view.components
 		{
 			_testFailPopup.show();
 			_vignette.stop();
+		}
+		
+		public function get answers():Vector.<ResultQualativeAnswerVO>
+		{
+			return _testQuestionsScreen.answers;
 		}
 		
 		private function introScreenNextHandler(event : ScreenEvent) : void

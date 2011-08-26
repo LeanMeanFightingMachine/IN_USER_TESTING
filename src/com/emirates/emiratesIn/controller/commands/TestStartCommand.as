@@ -2,6 +2,7 @@ package com.emirates.emiratesIn.controller.commands
 {
 	import com.emirates.emiratesIn.enum.Config;
 	import com.emirates.emiratesIn.model.AttentionModel;
+	import com.emirates.emiratesIn.model.ResultsModel;
 	import com.emirates.emiratesIn.model.TestModel;
 	import com.emirates.emiratesIn.vo.AttentionVO;
 

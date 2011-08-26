@@ -9,5 +9,6 @@ package com.emirates.emiratesIn.vo
 		public var hold:int;
 		public var adjust:int;
 		public var feedback:Boolean;
+		public var level:int;
 	}
 }

@@ -61,11 +61,11 @@ package com.emirates.emiratesIn.display.ui
 			
 			graphics.clear();
 			
-			graphics.lineStyle(10,0x0000FF,0.7);
+			graphics.lineStyle(10,0x999999,0.5);
 			graphics.moveTo(0, _height - int((_target / 100) * _height));
 			graphics.lineTo(_width, _height - int((_target / 100) * _height));
 			
-			graphics.lineStyle(10,0xFF0000, 0.7);
+			graphics.lineStyle(10,0x999999, 0.5);
 			graphics.moveTo(start, _height - int((_attention[0] / 100) * _height));
 			for (i = 1; i < _attention.length; i++)
 			{

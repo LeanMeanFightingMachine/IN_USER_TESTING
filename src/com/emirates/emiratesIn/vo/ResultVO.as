@@ -7,9 +7,10 @@ package com.emirates.emiratesIn.vo
 	{
 		public var type:String;
 		public var level:int;
+		public var adjust:int;
 		public var hold:int;
 		public var position:int;
-		public var target:int;
+		public var feedback:Boolean;
 		public var quantative:ResultQuantativeVO = new ResultQuantativeVO();
 		public var qualative:ResultQualativeVO = new ResultQualativeVO();
 	}

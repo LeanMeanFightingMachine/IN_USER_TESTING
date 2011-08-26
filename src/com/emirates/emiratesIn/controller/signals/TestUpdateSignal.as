@@ -1,6 +1,6 @@
 package com.emirates.emiratesIn.controller.signals
 {
-	import com.emirates.emiratesIn.vo.HotspotVO;
+	import com.emirates.emiratesIn.vo.UpdateVO;
 	import org.osflash.signals.Signal;
 
 	/**
@@ -10,7 +10,7 @@ package com.emirates.emiratesIn.controller.signals
 	{
 		public function TestUpdateSignal()
 		{
-			super(HotspotVO);
+			super(UpdateVO);
 		}
 	}
 }

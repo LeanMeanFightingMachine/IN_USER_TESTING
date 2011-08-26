@@ -1,6 +1,5 @@
 package com.emirates.emiratesIn.display.ui
 {
-	import flash.data.EncryptedLocalStore;
 	import com.emirates.emiratesIn.display.ui.debug.Debug;
 
 	import flash.display.Sprite;
@@ -18,10 +17,13 @@ package com.emirates.emiratesIn.display.ui
 		protected var _answers:Vector.<Answer> = new Vector.<Answer>();
 		private var _answerContainer:Sprite = new Sprite();
 		private var _answer:int = -1;
+		private var _id:int;
 		
-		public function Question(question:String,answers:Array)
+		public function Question(id:int,question:String,answers:Array)
 		{
 			super();
+			
+			_id = id;
 			
 			Debug.log(question);
 			
@@ -64,6 +66,11 @@ package com.emirates.emiratesIn.display.ui
 			{
 				_answers[i].unselect();
 			}
+		}
+		
+		public function get id():int
+		{
+			return _id;
 		}
 		
 		public function get answer():int

@@ -24,5 +24,7 @@ package com.emirates.emiratesIn.enum
 		public static const TESTING_DURATION:int = 10;
 		public static const TESTING_HOTSPOT_MAX_DELAY : int = 5;
 		public static const TESTING_QUESTIONS : Array = [Questions.DIFFICULTY, Questions.CONTROL, Questions.FEEDBACK];
+		
+		public static const DATABASE_NAME:String = "results";
 	}
 }

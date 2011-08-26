@@ -7,7 +7,8 @@ package com.emirates.emiratesIn.view.components.events
 	 */
 	public class TestingEvent extends Event
 	{
-		public static const NEXT:String = "TestingEvent_next";
+		public static const FIRST:String = "TestingEvent_first";
+		public static const TEST_COMPLETE:String = "TestingEvent_testComplete";
 		public static const RETRY:String = "TestingEvent_retry";
 		public static const START:String = "TestingEvent_start";
 		

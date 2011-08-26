@@ -177,8 +177,8 @@ package com.emirates.emiratesIn.view.components
 			_introScreen.hide();
 			
 			Debug.log("introScreenNextHandler");
-			
-			dispatchEvent(new TestingEvent(TestingEvent.NEXT));
+
+			dispatchEvent(new TestingEvent(TestingEvent.FIRST));
 		}
 		
 		private function next():void
@@ -220,8 +220,8 @@ package com.emirates.emiratesIn.view.components
 		private function testQuestionsPopupComplete(event : ScreenEvent) : void
 		{
 			_testQuestionsScreen.hide();
-			
-			dispatchEvent(new TestingEvent(TestingEvent.NEXT));
+
+			dispatchEvent(new TestingEvent(TestingEvent.TEST_COMPLETE));
 		}
 	}
 }

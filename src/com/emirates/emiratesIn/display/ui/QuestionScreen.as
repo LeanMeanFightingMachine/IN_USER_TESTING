@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn.display.ui
 {
+	import flash.events.MouseEvent;
 	import com.emirates.emiratesIn.vo.ResultQualativeAnswerVO;
 
 	/**
@@ -8,10 +9,13 @@ package com.emirates.emiratesIn.display.ui
 	public class QuestionScreen extends Screen
 	{
 		private var _questions:Vector.<Question> = new Vector.<Question>();
+		private var _prompt:Prompt = new Prompt("Please answer all the questions");
 		
 		public function QuestionScreen()
 		{
 			super();
+			
+			addChild(_prompt);
 		}
 			
 		override public function show() : void
@@ -61,6 +65,36 @@ package com.emirates.emiratesIn.display.ui
 				_questions[i].y = _contentHeight + 20;
 				_contentHeight = _questions[i].y + _questions[i].height;
 			}
+			
+			_prompt.x = _button.x + (_button.width * 0.5);
+			_prompt.y = _button.y - 10;
+		}
+		
+		private function valid():Boolean
+		{
+			for (var i : int = 0; i < _questions.length; i++)
+			{
+				if(_questions[i].answer == -1)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+			
+		override protected function buttonClickHandler(event : MouseEvent) : void
+		{
+			if(valid())
+			{
+				_prompt.hide();
+				super.buttonClickHandler(event);
+			}
+			else
+			{
+				_prompt.show();
+			}
+			
 		}
 	}
 }

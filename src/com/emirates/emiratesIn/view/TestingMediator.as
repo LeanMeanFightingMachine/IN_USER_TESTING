@@ -1,6 +1,5 @@
 package com.emirates.emiratesIn.view
 {
-	import com.emirates.emiratesIn.controller.signals.TestHotspotSignal;
 	import com.emirates.emiratesIn.controller.signals.AttentionUpdateSignal;
 	import com.emirates.emiratesIn.controller.signals.GotNextStateSignal;
 	import com.emirates.emiratesIn.controller.signals.GotNextTestSignal;
@@ -8,6 +7,7 @@ package com.emirates.emiratesIn.view
 	import com.emirates.emiratesIn.controller.signals.StateCompleteSignal;
 	import com.emirates.emiratesIn.controller.signals.TestCompleteSignal;
 	import com.emirates.emiratesIn.controller.signals.TestFailSignal;
+	import com.emirates.emiratesIn.controller.signals.TestHotspotSignal;
 	import com.emirates.emiratesIn.controller.signals.TestRetrySignal;
 	import com.emirates.emiratesIn.controller.signals.TestStartSignal;
 	import com.emirates.emiratesIn.controller.signals.TestSuccessSignal;
@@ -17,6 +17,7 @@ package com.emirates.emiratesIn.view
 	import com.emirates.emiratesIn.model.ResultsModel;
 	import com.emirates.emiratesIn.view.components.TestingView;
 	import com.emirates.emiratesIn.view.components.events.TestingEvent;
+	import com.emirates.emiratesIn.vo.HotspotVO;
 	import com.emirates.emiratesIn.vo.TestVO;
 	import com.emirates.emiratesIn.vo.UpdateVO;
 
@@ -90,7 +91,8 @@ package com.emirates.emiratesIn.view
 			testSuccessSignal.add( testSuccessHandler );
 			
 			view.addEventListener(Event.COMPLETE, viewCompleteHandler);
-			view.addEventListener(TestingEvent.NEXT, testingNextHandler);
+			view.addEventListener(TestingEvent.FIRST, testingFirstHandler);
+			view.addEventListener(TestingEvent.TEST_COMPLETE, testingTestCompleteHandler);
 			view.addEventListener(TestingEvent.START, testingStartHandler);
 			view.addEventListener(TestingEvent.RETRY, testingRetryHandler);
 		}
@@ -120,7 +122,7 @@ package com.emirates.emiratesIn.view
 			view.update(vo);
 		}
 		
-		private function testSuccessHandler():void
+		private function testSuccessHandler(time:int):void
 		{
 			Debug.log("testSuccessHandler");
 			view.success();
@@ -133,7 +135,7 @@ package com.emirates.emiratesIn.view
 			view.fail();
 		}
 		
-		private function testHotspotHandler():void
+		private function testHotspotHandler(vo:HotspotVO):void
 		{
 			view.hotspot();
 		}
@@ -143,8 +145,13 @@ package com.emirates.emiratesIn.view
 			view.attention(value);
 		}
 		
-		private function testingNextHandler(event : TestingEvent) : void
+		private function testingFirstHandler(event : TestingEvent) : void
 		{
+			testCompleteSignal.dispatch();
+		}
+		
+		private function testingTestCompleteHandler(event : TestingEvent) : void
+		{	
 			resultsModel.answers = view.answers;
 			
 			testCompleteSignal.dispatch();

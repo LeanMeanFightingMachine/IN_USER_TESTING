@@ -48,6 +48,7 @@ package com.emirates.emiratesIn.model
 		
 		private var _target:Number;
 		private var _on:Boolean = false;
+		private var _hotspot:Boolean = false;
 		
 		private var _attention:AttentionVO;
 		
@@ -80,19 +81,21 @@ package com.emirates.emiratesIn.model
 			_delayTimer.delay = Config.TESTING_HOTSPOT_MAX_DELAY * Math.random() * 1000;
 			_delayTimer.reset();
 			_delayTimer.start();
+			
+			_on = true;
 		}
 		
 		public function update(attention:AttentionVO):void
 		{
 			_attention = attention;
 			
-			//if(_on)
-			//{
+			if(_on)
+			{
 				var update : UpdateVO = new UpdateVO();
 				update.attention = attention.raw;
 				update.hold = _hold;
 				update.target = _target;
-				update.hotspot = _on;
+				update.hotspot = _hotspot;
 				update.time = getTimer() - _startStamp;
 				
 				Debug.log("attention: " + attention.raw + " target: " + _target);
@@ -104,11 +107,12 @@ package com.emirates.emiratesIn.model
 					if(_hold == 0)
 					{
 						_on = false;
+						_hotspot = false;
 			
 						_testTimer.reset();
 						_holdTimer.reset();
 						
-						testSuccessSignal.dispatch();
+						testSuccessSignal.dispatch(getTimer() - _hotspotStamp);
 					}
 					else if(!_holdTimer.running)
 					{
@@ -132,7 +136,7 @@ package com.emirates.emiratesIn.model
 				}
 	
 				testUpdateSignal.dispatch(update);
-			//}
+			}
 		}
 		
 		private function hotspot():void
@@ -159,7 +163,7 @@ package com.emirates.emiratesIn.model
 			
 			_testTimer.start();
 			
-			_on = true;
+			_hotspot = true;
 
 			var vo : HotspotVO = new HotspotVO();
 			vo.target = _target;
@@ -175,6 +179,7 @@ package com.emirates.emiratesIn.model
 		private function testTimerCompleteHandler(event : TimerEvent) : void
 		{
 			_on = false;
+			_hotspot = false;
 			
 			_testTimer.reset();
 			_holdTimer.reset();
@@ -185,6 +190,7 @@ package com.emirates.emiratesIn.model
 		private function holdTimerCompleteHandler(event : TimerEvent) : void
 		{
 			_on = false;
+			_hotspot = false;
 			
 			_testTimer.reset();
 			_holdTimer.reset();

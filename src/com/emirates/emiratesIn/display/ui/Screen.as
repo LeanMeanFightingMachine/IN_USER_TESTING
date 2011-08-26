@@ -97,7 +97,7 @@ package com.emirates.emiratesIn.display.ui
 			_button.y = stage.stageHeight - _button.height - 20;
 		}
 		
-		private function buttonClickHandler(event : MouseEvent) : void
+		protected function buttonClickHandler(event : MouseEvent) : void
 		{
 			dispatchEvent(new ScreenEvent(ScreenEvent.NEXT));
 		}

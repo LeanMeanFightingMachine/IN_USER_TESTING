@@ -15,17 +15,14 @@ package com.emirates.emiratesIn.service
 	 */
 	public class DatabaseService extends Actor
 	{
-		private var conn : SQLConnection;
-		private var sqlStat : SQLStatement;
-		
 		private var _connection:SQLConnection;
 
 		public function openDatabaseConnection() : void
 		{
 			// create new sqlConnection
 			_connection = new SQLConnection();
-			_connection.addEventListener(SQLEvent.OPEN, onDatabaseOpen);
-			_connection.addEventListener(SQLErrorEvent.ERROR, errorHandler);
+			_connection.addEventListener(SQLEvent.OPEN, connectionOpenHandler);
+			_connection.addEventListener(SQLErrorEvent.ERROR, connectionErrorHandler);
 
 			// get currently dir
 			var databaseFile : File = File.applicationStorageDirectory.resolvePath(Config.DATABASE_NAME + ".db");
@@ -34,67 +31,65 @@ package com.emirates.emiratesIn.service
 			_connection.openAsync(databaseFile);
 		}
 
-		// connect and init database/table
-		private function onDatabaseOpen(event : SQLEvent) : void
+		private function createTables():void
 		{
-			// init sqlStatement object
-			sqlStat = new SQLStatement();
-			sqlStat.sqlConnection = conn;
-			var sql : String = "CREATE TABLE IF NOT EXISTS user (" + "    id INTEGER PRIMARY KEY AUTOINCREMENT, " + "    name TEXT, " + "    password TEXT" + ")";
-			sqlStat.text = sql;
-			sqlStat.addEventListener(SQLEvent.RESULT, statResult);
-			sqlStat.addEventListener(SQLErrorEvent.ERROR, createError);
-			sqlStat.execute();
+			createUserTable();
+		}
+		
+		private function createUserTable():void
+		{
+			var statement:SQLStatement = new SQLStatement();
+			statement.sqlConnection = _connection;
+			var sql : String = "CREATE TABLE IF NOT EXISTS user (" + "    id INTEGER PRIMARY KEY AUTOINCREMENT," + "    created DATE NOT NULL" + ")";
+			statement.text = sql;
+			statement.addEventListener(SQLEvent.RESULT, createUserTableResult);
+			statement.addEventListener(SQLErrorEvent.ERROR, createErrorHandler);
+			statement.execute();
+		}
+		
+		private function createResultTable():void
+		{
+			var statement:SQLStatement = new SQLStatement();
+			statement.sqlConnection = _connection;
+			var sql : String = "CREATE TABLE IF NOT EXISTS result (" + "    id INTEGER PRIMARY KEY AUTOINCREMENT," + "    created DATE NOT NULL," + "    user INTEGER" + ")";
+			statement.text = sql;
+			statement.addEventListener(SQLEvent.RESULT, createResultTableResult);
+			statement.addEventListener(SQLErrorEvent.ERROR, createErrorHandler);
+			statement.execute();
+		}
+		
+		private function insertUser():void
+		{
+			var sql : String = "Insert into user(id,created) values('" + new Date() + "')";
+		}
+		
+		private function insertResult():void
+		{
+			var sql : String = "Insert into results(id,created,user) values('" + new Date() + "',(SELECT LAST(id) FROM user))";
 		}
 
-		private function statResult(event : SQLEvent) : void
-		{
-			// refresh data
-			var sqlresult : SQLResult = sqlStat.getResult();
-			if (sqlresult.data == null)
-			{
-				getResult();
-				return;
-			}
-			
-		}
-
-		// get data
-		private function getResult() : void
-		{
-			var sqlquery : String = "SELECT * FROM user";
-			excuseUpdate(sqlquery);
-		}
-
-		private function createError(event : SQLErrorEvent) : void
+		private function createErrorHandler(event : SQLErrorEvent) : void
 		{
 			trace("Details:", event.error.message);
 		}
 
-		private function errorHandler(event : SQLErrorEvent) : void
+		private function connectionErrorHandler(event : SQLErrorEvent) : void
 		{
 			trace("Details:", event.error.message);
 		}
-
-		// update
-		private function excuseUpdate(sql : String) : void
+		
+		private function connectionOpenHandler(event : SQLEvent) : void
 		{
-			sqlStat.text = sql;
-			sqlStat.execute();
+			createTables();
 		}
-
-		// insert
-		private function insertemp() : void
+		
+		private function createUserTableResult(event : SQLEvent) : void
 		{
-			//var sqlupdate : String = "Insert into user(id,name,password) values('" + name.text + "','" + password.text + "')";
-			//excuseUpdate(sqlupdate)
+			createResultTable();
 		}
-
-		// delete
-		private function deleteemp() : void
+		
+		private function createResultTableResult(event : SQLEvent) : void
 		{
-			//var sqldelete : String = "delete from user where id='" + datafiled.selectedItem.id + "'";
-			//excuseUpdate(sqldelete);
 		}
 	}
 }

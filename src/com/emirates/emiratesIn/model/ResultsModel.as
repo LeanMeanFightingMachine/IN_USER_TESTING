@@ -34,6 +34,11 @@ package com.emirates.emiratesIn.model
 			_result.quantative.data.push(value);
 		}
 		
+		public function get last():ResultVO
+		{
+			return _result;
+		}
+		
 		public function set answers(value:Vector.<ResultQualativeAnswerVO>):void
 		{
 			_result.qualative.answers = value;

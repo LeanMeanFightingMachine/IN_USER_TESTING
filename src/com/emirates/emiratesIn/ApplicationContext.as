@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn
 {
+	import com.emirates.emiratesIn.service.DatabaseService;
 	import com.emirates.emiratesIn.controller.commands.AttentionUpdateCommand;
 	import com.emirates.emiratesIn.controller.commands.GotNextStateCommand;
 	import com.emirates.emiratesIn.controller.commands.GotNextTestCommand;
@@ -64,6 +65,9 @@ package com.emirates.emiratesIn
 			injector.mapSingleton(StateModel);
 			injector.mapSingleton(TestingModel);
 			injector.mapSingleton(TestModel);
+			
+			// Services
+			injector.mapSingleton(DatabaseService);
 
 			// Signals
 			injector.mapSingleton(AttentionUpdateSignal);

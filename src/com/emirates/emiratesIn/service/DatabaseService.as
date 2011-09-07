@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn.service
 {
+	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import com.emirates.emiratesIn.enum.Config;
 	import org.robotlegs.mvcs.Actor;
 
@@ -25,49 +26,63 @@ package com.emirates.emiratesIn.service
 			_connection.addEventListener(SQLErrorEvent.ERROR, connectionErrorHandler);
 
 			// get currently dir
-			var databaseFile : File = File.applicationStorageDirectory.resolvePath(Config.DATABASE_NAME + ".db");
+			var databaseFile : File = File.documentsDirectory.resolvePath(Config.DATABASE_NAME + ".db");
 
 			// open database,If the file doesn't exist yet, it will be created
 			_connection.openAsync(databaseFile);
 		}
-
-		private function createTables():void
-		{
-			createUserTable();
-		}
 		
-		private function createUserTable():void
+		public function insertUser():void
 		{
 			var statement:SQLStatement = new SQLStatement();
 			statement.sqlConnection = _connection;
-			var sql : String = "CREATE TABLE IF NOT EXISTS user (" + "    id INTEGER PRIMARY KEY AUTOINCREMENT," + "    created DATE NOT NULL" + ")";
+			var sql : String = "INSERT INTO users(created) VALUES (" + new Date().getTime() + ")";
 			statement.text = sql;
-			statement.addEventListener(SQLEvent.RESULT, createUserTableResult);
+			statement.addEventListener(SQLEvent.RESULT, insertUserResult);
+			statement.addEventListener(SQLErrorEvent.ERROR, insertErrorHandler);
+			statement.execute();
+			
+			Debug.log("insertUser");
+		}
+		
+		public function insertTest(type:String, level:int, adjust:int, hold:int, position:int, feedback:Boolean, target:int, startTime:int):void
+		{
+			var statement:SQLStatement = new SQLStatement();
+			statement.sqlConnection = _connection;
+			var sql : String = "INSERT INTO tests(created,user,type,level,adjust,hold,position,feedback,target,startTime) VALUES (" + new Date().getTime() + ", " + "(SELECT MAX(id) FROM users)" + ", '" + type + "', " + level + ", " + adjust + ", " + hold + ", " + position + ", " + feedback + ",  " + target + ", " + startTime + ")";
+			statement.text = sql;
+			statement.addEventListener(SQLEvent.RESULT, insertTestResult);
+			statement.addEventListener(SQLErrorEvent.ERROR, insertErrorHandler);
+			statement.execute();
+		}
+
+		private function createTables():void
+		{
+			createUsersTable();
+		}
+		
+		private function createUsersTable():void
+		{
+			var statement:SQLStatement = new SQLStatement();
+			statement.sqlConnection = _connection;
+			var sql : String = "CREATE TABLE IF NOT EXISTS users ( id INTEGER PRIMARY KEY AUTOINCREMENT, created INTEGER NOT NULL )";
+			statement.text = sql;
+			statement.addEventListener(SQLEvent.RESULT, createUsersTableResult);
 			statement.addEventListener(SQLErrorEvent.ERROR, createErrorHandler);
 			statement.execute();
 		}
 		
-		private function createResultTable():void
+		private function createTestsTable():void
 		{
 			var statement:SQLStatement = new SQLStatement();
 			statement.sqlConnection = _connection;
-			var sql : String = "CREATE TABLE IF NOT EXISTS result (" + "    id INTEGER PRIMARY KEY AUTOINCREMENT," + "    created DATE NOT NULL," + "    user INTEGER" + ")";
+			var sql : String = "CREATE TABLE IF NOT EXISTS tests ( id INTEGER PRIMARY KEY AUTOINCREMENT, created INTEGER NOT NULL, user INTEGER, type TEXT, level INTEGER, adjust INTEGER, hold INTEGER, position INTEGER, feedback BOOLEAN, target INTEGER, startTime INTEGER )";
 			statement.text = sql;
 			statement.addEventListener(SQLEvent.RESULT, createResultTableResult);
 			statement.addEventListener(SQLErrorEvent.ERROR, createErrorHandler);
 			statement.execute();
 		}
 		
-		private function insertUser():void
-		{
-			var sql : String = "Insert into user(id,created) values('" + new Date() + "')";
-		}
-		
-		private function insertResult():void
-		{
-			var sql : String = "Insert into results(id,created,user) values('" + new Date() + "',(SELECT LAST(id) FROM user))";
-		}
-
 		private function createErrorHandler(event : SQLErrorEvent) : void
 		{
 			trace("Details:", event.error.message);
@@ -83,13 +98,28 @@ package com.emirates.emiratesIn.service
 			createTables();
 		}
 		
-		private function createUserTableResult(event : SQLEvent) : void
+		private function createUsersTableResult(event : SQLEvent) : void
 		{
-			createResultTable();
+			createTestsTable();
 		}
 		
 		private function createResultTableResult(event : SQLEvent) : void
 		{
+		}
+		
+		private function insertErrorHandler(event : SQLErrorEvent) : void
+		{
+			Debug.log("insertErrorHandler : " + event.error.name + " : " + event.error.message + " : " + event.error.details);
+		}
+
+		private function insertUserResult(event : SQLEvent) : void
+		{
+			Debug.log("insertUserResult");
+		}
+		
+		private function insertTestResult(event : SQLEvent) : void
+		{
+			Debug.log("insertTestResult");
 		}
 	}
 }

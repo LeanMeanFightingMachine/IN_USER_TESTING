@@ -1,7 +1,9 @@
 package com.emirates.emiratesIn.model
 {
-	import com.emirates.emiratesIn.enum.Config;
 	import com.emirates.emiratesIn.controller.signals.GotNextStateSignal;
+	import com.emirates.emiratesIn.enum.Config;
+	import com.emirates.emiratesIn.service.DatabaseService;
+
 	import org.robotlegs.mvcs.Actor;
 
 	/**
@@ -11,6 +13,9 @@ package com.emirates.emiratesIn.model
 	{
 		[Inject]
 		public var nextStateSignal:GotNextStateSignal;
+		
+		[Inject]
+		public var databaseService:DatabaseService;
 		
 		private var _state:String;
 		

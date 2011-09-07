@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn.controller.commands
 {
+	import com.emirates.emiratesIn.service.DatabaseService;
 	import com.emirates.emiratesIn.model.StateModel;
 
 	import org.robotlegs.mvcs.Command;
@@ -12,8 +13,13 @@ package com.emirates.emiratesIn.controller.commands
 		[Inject]
 		public var stateModel:StateModel;
 		
+		[Inject]
+		public var databaseService:DatabaseService;
+		
 		override public function execute() : void
 		{
+			databaseService.openDatabaseConnection();
+			
 			stateModel.next();
 		}
 	}

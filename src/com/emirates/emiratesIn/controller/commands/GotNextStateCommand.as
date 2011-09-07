@@ -2,6 +2,7 @@ package com.emirates.emiratesIn.controller.commands
 {
 	import com.emirates.emiratesIn.enum.State;
 	import com.emirates.emiratesIn.model.TestingModel;
+	import com.emirates.emiratesIn.service.DatabaseService;
 
 	import org.robotlegs.mvcs.SignalCommand;
 
@@ -16,11 +17,15 @@ package com.emirates.emiratesIn.controller.commands
 		[Inject]
 		public var testingModel:TestingModel;
 		
+		[Inject]
+		public var databaseService:DatabaseService;
+		
 		override public function execute() : void
 		{
 			if (state == State.TESTING)
 			{
 				testingModel.reset();
+				databaseService.insertUser();
 			}
 		}
 	}

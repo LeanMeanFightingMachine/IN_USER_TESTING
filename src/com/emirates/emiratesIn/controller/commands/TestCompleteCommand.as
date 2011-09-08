@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn.controller.commands
 {
+	import com.emirates.emiratesIn.vo.ResultVO;
 	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import com.emirates.emiratesIn.model.ResultsModel;
 	import com.emirates.emiratesIn.model.TestingModel;
@@ -23,9 +24,10 @@ package com.emirates.emiratesIn.controller.commands
 		
 		override public function execute() : void
 		{
-			testingModel.next();
+			var last : ResultVO = resultsModel.last;
+			databaseService.updateTest(last.quantative.target, last.quantative.startTime, last.quantative.completedTime);
 			
-			databaseService.insertTest(resultsModel.last.type, resultsModel.last.level, resultsModel.last.adjust, resultsModel.last.hold, resultsModel.last.position, resultsModel.last.feedback, resultsModel.last.quantative.target, resultsModel.last.quantative.startTime);
+			testingModel.next();
 			
 			Debug.log("TestCompleteCommand");
 		}

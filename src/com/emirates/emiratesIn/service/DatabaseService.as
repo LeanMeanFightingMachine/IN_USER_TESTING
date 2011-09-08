@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn.service
 {
+	import flash.errors.SQLError;
 	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import com.emirates.emiratesIn.enum.Config;
 	import org.robotlegs.mvcs.Actor;
@@ -22,38 +23,120 @@ package com.emirates.emiratesIn.service
 		{
 			// create new sqlConnection
 			_connection = new SQLConnection();
-			_connection.addEventListener(SQLEvent.OPEN, connectionOpenHandler);
-			_connection.addEventListener(SQLErrorEvent.ERROR, connectionErrorHandler);
 
 			// get currently dir
 			var databaseFile : File = File.documentsDirectory.resolvePath(Config.DATABASE_NAME + ".db");
 
-			// open database,If the file doesn't exist yet, it will be created
+			// open database, if the file doesn't exist yet, it will be created
 			_connection.openAsync(databaseFile);
+			
+			try
+			{
+				_connection.open(databaseFile);
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message);
+			}
+			finally
+			{
+				createTables();
+			}
 		}
 		
 		public function insertUser():void
 		{
+			Debug.log("insertUser");
+			
 			var statement:SQLStatement = new SQLStatement();
 			statement.sqlConnection = _connection;
 			var sql : String = "INSERT INTO users(created) VALUES (" + new Date().getTime() + ")";
 			statement.text = sql;
-			statement.addEventListener(SQLEvent.RESULT, insertUserResult);
-			statement.addEventListener(SQLErrorEvent.ERROR, insertErrorHandler);
-			statement.execute();
 			
-			Debug.log("insertUser");
+			try
+			{
+				statement.execute();
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message);
+			}
 		}
 		
-		public function insertTest(type:String, level:int, adjust:int, hold:int, position:int, feedback:Boolean, target:int, startTime:int):void
+		public function insertTest(type:String, level:int, adjust:int, hold:int, position:int, feedback:Boolean):void
 		{
+			Debug.log("insertTest");
+			
 			var statement:SQLStatement = new SQLStatement();
 			statement.sqlConnection = _connection;
-			var sql : String = "INSERT INTO tests(created,user,type,level,adjust,hold,position,feedback,target,startTime) VALUES (" + new Date().getTime() + ", " + "(SELECT MAX(id) FROM users)" + ", '" + type + "', " + level + ", " + adjust + ", " + hold + ", " + position + ", " + feedback + ",  " + target + ", " + startTime + ")";
+			var sql : String = "INSERT INTO tests(created,user,type,level,adjust,hold,position,feedback) VALUES (" + new Date().getTime() + ", " + "(SELECT MAX(id) FROM users)" + ", '" + type + "', " + level + ", " + adjust + ", " + hold + ", " + position + ", " + feedback + ")";
 			statement.text = sql;
-			statement.addEventListener(SQLEvent.RESULT, insertTestResult);
-			statement.addEventListener(SQLErrorEvent.ERROR, insertErrorHandler);
-			statement.execute();
+			
+			try
+			{
+				statement.execute();
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message);
+			}
+		}
+		
+		public function updateTest(target:int, startTime:int, completedTime:int):void
+		{
+			Debug.log(">>> updateTest");
+			
+			var statement:SQLStatement = new SQLStatement();
+			statement.sqlConnection = _connection;
+			var sql : String = "UPDATE tests SET target=" + target + ",startTime=" + startTime + ",completedTime=" + completedTime + " WHERE (SELECT MAX(id))";
+			statement.text = sql;
+			
+			try
+			{
+				statement.execute();
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message + " : " + error.details);
+			}
+		}
+		
+		public function insertData(attention:int, hotspot:Boolean, hit:Boolean, time:int):void
+		{
+			Debug.log("insertData");
+			
+			var statement:SQLStatement = new SQLStatement();
+			statement.sqlConnection = _connection;
+			var sql : String = "INSERT INTO data(created,test,attention,hotspot,hit,time) VALUES (" + new Date().getTime() + ", " + "(SELECT MAX(id) FROM tests)" + ", '" + attention + "', " + hotspot + ", " + hit + ", " + time + ")";
+			statement.text = sql;
+			
+			try
+			{
+				statement.execute();
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message + " : " + error.details);
+			}
+		}
+		
+		public function insertAnswer(question:int, answer:int):void
+		{
+			Debug.log("insertAnswer");
+			
+			var statement:SQLStatement = new SQLStatement();
+			statement.sqlConnection = _connection;
+			var sql : String = "INSERT INTO answers (created,test,question,answer) VALUES (" + new Date().getTime() + ", " + "(SELECT MAX(id) FROM tests)" + ", '" + question + "', " + answer + ")";
+			statement.text = sql;
+			
+			try
+			{
+				statement.execute();
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message + " : " + error.details);
+			}
 		}
 
 		private function createTables():void
@@ -63,63 +146,94 @@ package com.emirates.emiratesIn.service
 		
 		private function createUsersTable():void
 		{
+			Debug.log("createUsersTable");
+			
 			var statement:SQLStatement = new SQLStatement();
 			statement.sqlConnection = _connection;
 			var sql : String = "CREATE TABLE IF NOT EXISTS users ( id INTEGER PRIMARY KEY AUTOINCREMENT, created INTEGER NOT NULL )";
 			statement.text = sql;
-			statement.addEventListener(SQLEvent.RESULT, createUsersTableResult);
-			statement.addEventListener(SQLErrorEvent.ERROR, createErrorHandler);
-			statement.execute();
+			
+			try
+			{
+				statement.execute();
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message);
+			}
+			finally
+			{
+				createTestsTable();
+			}
 		}
 		
 		private function createTestsTable():void
 		{
+			Debug.log("createTestsTable");
+			
 			var statement:SQLStatement = new SQLStatement();
 			statement.sqlConnection = _connection;
-			var sql : String = "CREATE TABLE IF NOT EXISTS tests ( id INTEGER PRIMARY KEY AUTOINCREMENT, created INTEGER NOT NULL, user INTEGER, type TEXT, level INTEGER, adjust INTEGER, hold INTEGER, position INTEGER, feedback BOOLEAN, target INTEGER, startTime INTEGER )";
+			var sql : String = "CREATE TABLE IF NOT EXISTS tests ( id INTEGER PRIMARY KEY AUTOINCREMENT, created INTEGER NOT NULL, user INTEGER, type TEXT, level INTEGER, adjust INTEGER, hold INTEGER, position INTEGER, feedback BOOLEAN, target INTEGER, startTime INTEGER, completedTime INTEGER )";
 			statement.text = sql;
-			statement.addEventListener(SQLEvent.RESULT, createResultTableResult);
-			statement.addEventListener(SQLErrorEvent.ERROR, createErrorHandler);
-			statement.execute();
+			
+			try
+			{
+				statement.execute();
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message);
+			}
+			finally
+			{
+				createDataTable();
+			}
 		}
 		
-		private function createErrorHandler(event : SQLErrorEvent) : void
+		private function createDataTable():void
 		{
-			trace("Details:", event.error.message);
-		}
-
-		private function connectionErrorHandler(event : SQLErrorEvent) : void
-		{
-			trace("Details:", event.error.message);
-		}
-		
-		private function connectionOpenHandler(event : SQLEvent) : void
-		{
-			createTables();
-		}
-		
-		private function createUsersTableResult(event : SQLEvent) : void
-		{
-			createTestsTable();
-		}
-		
-		private function createResultTableResult(event : SQLEvent) : void
-		{
-		}
-		
-		private function insertErrorHandler(event : SQLErrorEvent) : void
-		{
-			Debug.log("insertErrorHandler : " + event.error.name + " : " + event.error.message + " : " + event.error.details);
-		}
-
-		private function insertUserResult(event : SQLEvent) : void
-		{
-			Debug.log("insertUserResult");
+			Debug.log("createDataTable");
+			
+			var statement:SQLStatement = new SQLStatement();
+			statement.sqlConnection = _connection;
+			var sql : String = "CREATE TABLE IF NOT EXISTS data ( id INTEGER PRIMARY KEY AUTOINCREMENT, created INTEGER NOT NULL, test INTEGER, attention INTEGER, hotspot BOOLEAN, hit BOOLEAN, time INTEGER )";
+			statement.text = sql;
+			
+			try
+			{
+				statement.execute();
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message);
+			}
+			finally
+			{
+				createAnswersTable();
+			}
 		}
 		
-		private function insertTestResult(event : SQLEvent) : void
+		private function createAnswersTable():void
 		{
-			Debug.log("insertTestResult");
+			Debug.log("createAnswersTable");
+			
+			var statement:SQLStatement = new SQLStatement();
+			statement.sqlConnection = _connection;
+			var sql : String = "CREATE TABLE IF NOT EXISTS answers ( id INTEGER PRIMARY KEY AUTOINCREMENT, created INTEGER NOT NULL, test INTEGER, question INTEGER, answer INTEGER )";
+			statement.text = sql;
+			
+			try
+			{
+				statement.execute();
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message);
+			}
+			finally
+			{
+				
+			}
 		}
 	}
 }

@@ -1,5 +1,8 @@
 package com.emirates.emiratesIn.view
 {
+	import com.emirates.emiratesIn.controller.signals.TestInitialSignal;
+	import com.emirates.emiratesIn.controller.commands.TestInitialCommand;
+	import com.emirates.emiratesIn.controller.signals.AnswersCompleteSignal;
 	import com.emirates.emiratesIn.controller.signals.AttentionUpdateSignal;
 	import com.emirates.emiratesIn.controller.signals.GotNextStateSignal;
 	import com.emirates.emiratesIn.controller.signals.GotNextTestSignal;
@@ -52,6 +55,9 @@ package com.emirates.emiratesIn.view
 		public var testCompleteSignal:TestCompleteSignal;
 		
 		[Inject]
+		public var testInitialSignal:TestInitialSignal;
+		
+		[Inject]
 		public var attentionUpdatedSignal:AttentionUpdateSignal;
 		
 		[Inject]
@@ -71,6 +77,9 @@ package com.emirates.emiratesIn.view
 		
 		[Inject]
 		public var testHotspotSignal:TestHotspotSignal;
+		
+		[Inject]
+		public var answersCompleteSignal:AnswersCompleteSignal;
 		
 		public function TestingMediator()
 		{
@@ -147,12 +156,12 @@ package com.emirates.emiratesIn.view
 		
 		private function testingFirstHandler(event : TestingEvent) : void
 		{
-			testCompleteSignal.dispatch();
+			testInitialSignal.dispatch();
 		}
 		
 		private function testingTestCompleteHandler(event : TestingEvent) : void
 		{	
-			resultsModel.answers = view.answers;
+			answersCompleteSignal.dispatch(view.answers);
 			
 			testCompleteSignal.dispatch();
 		}

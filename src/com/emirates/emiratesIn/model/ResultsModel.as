@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn.model
 {
+	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import com.emirates.emiratesIn.vo.ResultAttentionVO;
 	import com.emirates.emiratesIn.vo.ResultQualativeAnswerVO;
 	import com.emirates.emiratesIn.vo.ResultVO;
@@ -22,6 +23,8 @@ package com.emirates.emiratesIn.model
 		
 		public function add():void
 		{
+			Debug.log(">>> ADD <<<");
+			
 			_result = new ResultVO();
 			_result.position = _position;
 			_results.push(_result);
@@ -31,6 +34,8 @@ package com.emirates.emiratesIn.model
 		
 		public function addAttention(value:ResultAttentionVO):void
 		{
+			Debug.log("addAttention " + _result.quantative.data.length);
+			
 			_result.quantative.data.push(value);
 		}
 		

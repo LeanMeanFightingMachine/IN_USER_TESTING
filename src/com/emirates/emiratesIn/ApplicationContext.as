@@ -1,5 +1,9 @@
 package com.emirates.emiratesIn
 {
+	import com.emirates.emiratesIn.controller.commands.TestInitialCommand;
+	import com.emirates.emiratesIn.controller.signals.TestInitialSignal;
+	import com.emirates.emiratesIn.controller.commands.AnswersCompleteCommand;
+	import com.emirates.emiratesIn.controller.signals.AnswersCompleteSignal;
 	import com.emirates.emiratesIn.service.DatabaseService;
 	import com.emirates.emiratesIn.controller.commands.AttentionUpdateCommand;
 	import com.emirates.emiratesIn.controller.commands.GotNextStateCommand;
@@ -73,6 +77,7 @@ package com.emirates.emiratesIn
 			injector.mapSingleton(AttentionUpdateSignal);
 			
 			injector.mapSingleton(TestCompleteSignal);
+			injector.mapSingleton(TestInitialSignal);
 			injector.mapSingleton(GotNextTestSignal);
 			injector.mapSingleton(NoTestsSignal);
 			injector.mapSingleton(TestStartSignal);
@@ -83,16 +88,19 @@ package com.emirates.emiratesIn
 			injector.mapSingleton(TestHotspotSignal);
 			injector.mapSingleton(GotNextStateSignal);
 			injector.mapSingleton(StateCompleteSignal);
+			injector.mapSingleton(AnswersCompleteSignal);
 			
 			// Signals to commands
 			signalCommandMap.mapSignalClass(StateCompleteSignal, StateCompleteCommand);
 			signalCommandMap.mapSignalClass(GotNextStateSignal, GotNextStateCommand);
 			signalCommandMap.mapSignalClass(TestCompleteSignal, TestCompleteCommand);
+			signalCommandMap.mapSignalClass(TestInitialSignal, TestInitialCommand);
 			signalCommandMap.mapSignalClass(GotNextTestSignal, GotNextTestCommand);
 			signalCommandMap.mapSignalClass(TestStartSignal, TestStartCommand);
 			signalCommandMap.mapSignalClass(TestRetrySignal, TestRetryCommand);
 			signalCommandMap.mapSignalClass(TestHotspotSignal, TestHotspotCommand);
 			signalCommandMap.mapSignalClass(TestUpdateSignal, TestUpdateCommand);
+			signalCommandMap.mapSignalClass(AnswersCompleteSignal, AnswersCompleteCommand);
 
 			// Views
 			mediatorMap.mapView(IntroductionView, IntroductionMediator);

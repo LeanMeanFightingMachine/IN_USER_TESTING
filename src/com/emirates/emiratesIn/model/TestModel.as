@@ -78,7 +78,7 @@ package com.emirates.emiratesIn.model
 			
 			_testTimer.reset();
 
-			_delayTimer.delay = Config.TESTING_HOTSPOT_MAX_DELAY * Math.random() * 1000;
+			_delayTimer.delay = Config.TESTING_HOTSPOT_MIN_DELAY + ((Config.TESTING_HOTSPOT_MAX_DELAY - Config.TESTING_HOTSPOT_MIN_DELAY) * Math.random() * 1000);
 			_delayTimer.reset();
 			_delayTimer.start();
 			
@@ -99,8 +99,8 @@ package com.emirates.emiratesIn.model
 				update.time = getTimer() - _startStamp;
 				
 				Debug.log("attention: " + attention.raw + " target: " + _target);
-				
-				if (attention.raw >= _target)
+
+				if (_hotspot && attention.raw >= _target)
 				{
 					update.hit = true;
 					

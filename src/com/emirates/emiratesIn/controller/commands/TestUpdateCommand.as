@@ -31,7 +31,7 @@ package com.emirates.emiratesIn.controller.commands
 			
 			resultsModel.addAttention(result);
 			
-			databaseService.insertData(result.attention, result.hotspot, result.hit, result.time);
+			//databaseService.insertData(result.attention, result.hotspot, result.hit, result.time);
 		}
 	}
 }

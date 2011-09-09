@@ -44,6 +44,39 @@ package com.emirates.emiratesIn.service
 			}
 		}
 		
+		public function getTypeComparisionData():Array
+		{
+			var statement:SQLStatement = new SQLStatement();
+			statement.sqlConnection = _connection;
+			var sql : String = "SELECT * FROM tests";
+			statement.text = sql;
+			
+			try
+			{
+				statement.execute();
+				
+				var d:Array = statement.getResult().data;
+				
+				for(var i:int = 0; i < d.length; i++)
+				{
+					Debug.log(">>> " + d[i]);
+					
+					for (var j : String in d[i])
+					{
+						Debug.log(">>>>> " + j);
+					}
+				}
+				
+				return d;
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message);
+			}
+			
+			return null;
+		}
+		
 		public function insertUser():void
 		{
 			Debug.log("insertUser");
@@ -84,11 +117,11 @@ package com.emirates.emiratesIn.service
 		
 		public function updateTest(target:int, startTime:int, completedTime:int):void
 		{
-			Debug.log(">>> updateTest");
+			Debug.log(">>> updateTest : " + target + " : " + startTime +  " : " + completedTime);
 			
 			var statement:SQLStatement = new SQLStatement();
 			statement.sqlConnection = _connection;
-			var sql : String = "UPDATE tests SET target=" + target + ",startTime=" + startTime + ",completedTime=" + completedTime + " WHERE (SELECT MAX(id))";
+			var sql : String = "UPDATE tests SET target=" + target + ",startTime=" + startTime + ",completedTime=" + completedTime + " WHERE id=(SELECT MAX(id) FROM tests)";
 			statement.text = sql;
 			
 			try

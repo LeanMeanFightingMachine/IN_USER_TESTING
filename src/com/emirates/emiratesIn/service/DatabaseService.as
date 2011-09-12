@@ -57,15 +57,29 @@ package com.emirates.emiratesIn.service
 				
 				var d:Array = statement.getResult().data;
 				
-				for(var i:int = 0; i < d.length; i++)
-				{
-					Debug.log(">>> " + d[i]);
-					
-					for (var j : String in d[i])
-					{
-						Debug.log(">>>>> " + j);
-					}
-				}
+				return d;
+			}
+			catch(error:SQLError)
+			{
+				Debug.log(error.name + " : " + error.message);
+			}
+			
+			return null;
+		}
+		
+		public function getAnswersData():Array
+		{
+			var statement:SQLStatement = new SQLStatement();
+			statement.sqlConnection = _connection;
+			var sql : String = "SELECT * FROM answers, tests WHERE answers.test = tests.id";
+			
+			statement.text = sql;
+			
+			try
+			{
+				statement.execute();
+				
+				var d:Array = statement.getResult().data;
 				
 				return d;
 			}

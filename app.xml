@@ -17,8 +17,8 @@
         <minimizable>true</minimizable>
         <maximizable>true</maximizable>
         <resizable>false</resizable>
-        <width>1000</width>
-        <height>600</height>
+        <width>1280</width>
+        <height>800</height>
         <minSize>750 500</minSize>
         <!--maxSize>1280 960</maxSize-->
     </initialWindow>

@@ -26,7 +26,7 @@ package com.emirates.emiratesIn.view.components
 			_compareTypesByLevelOutput.y = 100;
 			
 			addChild(_compareTypesByHoldOutput);
-			_compareTypesByHoldOutput.x = 500;
+			_compareTypesByHoldOutput.x = 600;
 			_compareTypesByHoldOutput.y = 100;
 		}
 		

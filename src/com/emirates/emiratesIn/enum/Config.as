@@ -14,8 +14,8 @@ package com.emirates.emiratesIn.enum
 		public static const TRAINING_GAME_TWO_HOLD:int = 5;
 		public static const TRAINING_GAME_TWO_TARGET:int = 50;
 		
-		//public static const TESTING_HOLD : Array = [0,1,2,3,4,5];
-		public static const TESTING_HOLD : Array = [0];
+		public static const TESTING_HOLD : Array = [0,1,2,3,4,5];
+		//public static const TESTING_HOLD : Array = [0];
 		public static const TESTING_TESTS:Array = [Test.SET,Test.ENTRY,Test.OVERALL_AVERAGE,Test.SAMPLE_AVERAGE];
 		//public static const TESTING_TESTS : Array = [Test.ENTRY];
 		public static const TESTING_BASE:int = 50;

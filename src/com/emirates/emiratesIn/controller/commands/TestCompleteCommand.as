@@ -26,10 +26,13 @@ package com.emirates.emiratesIn.controller.commands
 		{
 			var last : ResultVO = resultsModel.last;
 			databaseService.updateTest(last.quantative.target, last.quantative.startTime, last.quantative.completedTime);
+
+			for (var i : int = 0; i < last.quantative.data.length; i++)
+			{
+				databaseService.insertData(last.quantative.data[i].attention, last.quantative.data[i].hotspot, last.quantative.data[i].hit, last.quantative.data[i].time);
+			}
 			
 			testingModel.next();
-			
-			Debug.log("TestCompleteCommand");
 		}
 	}
 }

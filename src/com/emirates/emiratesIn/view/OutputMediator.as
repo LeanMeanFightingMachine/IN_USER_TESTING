@@ -49,6 +49,7 @@ package com.emirates.emiratesIn.view
 				var typeComparisonData:Object = new Object();
 				var type:String;
 				var level:int;
+				var hold:int;
 				var completedTime:int;
 				
 				for (var i : int = 0; i < data.length; i++)
@@ -59,49 +60,74 @@ package com.emirates.emiratesIn.view
 					{
 						type = data[i]["type"];
 						level = data[i]["level"];
+						hold = data[i]["hold"];
 						
 						if(!typeComparisonData[type])
 						{
-							typeComparisonData[type] = new Array();
+							typeComparisonData[type] = new Object();
+							typeComparisonData[type]["level"] = new Array();
+							typeComparisonData[type]["hold"] = new Array();
 						}
 						
-						if(!typeComparisonData[type][level])
+						if(!typeComparisonData[type]["level"][level])
 						{
-							typeComparisonData[type][level] = new Object();
-							typeComparisonData[type][level]["all"] = new Array();
+							typeComparisonData[type]["level"][level] = new Object();
+							typeComparisonData[type]["level"][level]["all"] = new Array();
+						}
+						
+						if(!typeComparisonData[type]["hold"][hold])
+						{
+							typeComparisonData[type]["hold"][hold] = new Object();
+							typeComparisonData[type]["hold"][hold]["all"] = new Array();
 						}
 						
 						if(completedTime < 0)
 						{
-							typeComparisonData[type][level]["all"].push(Config.TESTING_DURATION * 1000);
+							typeComparisonData[type]["level"][level]["all"].push(Config.TESTING_DURATION * 1000);
+							typeComparisonData[type]["hold"][hold]["all"].push(Config.TESTING_DURATION * 1000);
 						}
 						else
 						{
-							typeComparisonData[type][level]["all"].push(completedTime);
+							typeComparisonData[type]["level"][level]["all"].push(completedTime);
+							typeComparisonData[type]["hold"][hold]["all"].push(completedTime);
 						}
 					}
-					
-					Debug.log("completedTime " + data[i]["completedTime"]);
 				}
 				
-				var total:int;
+				var l:int;
+				var n : int;
+				var levelTotal:int;
 			
 				for (var t : String in typeComparisonData)
 				{
-					for (var l : int = 0; l < typeComparisonData[t].length; l++)
+					for (l = 0; l < typeComparisonData[t]["level"].length; l++)
 					{
-						total = 0;
+						levelTotal = 0;
 						
-						if(typeComparisonData[t][l])
+						if(typeComparisonData[t]["level"][l])
 						{
-							for (var n : int = 0; n < typeComparisonData[t][l]["all"].length; n++)
+							for (n = 0; n < typeComparisonData[t]["level"][l]["all"].length; n++)
 							{
-								total += typeComparisonData[t][l]["all"][n];
+								levelTotal += typeComparisonData[t]["level"][l]["all"][n];
 							}
 							
-							typeComparisonData[t][l]["average"] = total / typeComparisonData[t][l]["all"].length;
+							typeComparisonData[t]["level"][l]["average"] = levelTotal / typeComparisonData[t]["level"][l]["all"].length;
 						}
+					}
+					
+					for (l = 0; l < typeComparisonData[t]["hold"].length; l++)
+					{
+						levelTotal = 0;
 						
+						if(typeComparisonData[t]["hold"][l])
+						{
+							for (n = 0; n < typeComparisonData[t]["hold"][l]["all"].length; n++)
+							{
+								levelTotal += typeComparisonData[t]["hold"][l]["all"][n];
+							}
+							
+							typeComparisonData[t]["hold"][l]["average"] = levelTotal / typeComparisonData[t]["hold"][l]["all"].length;
+						}
 					}
 				}
 				

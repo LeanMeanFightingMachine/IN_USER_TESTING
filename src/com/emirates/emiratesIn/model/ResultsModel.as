@@ -34,8 +34,6 @@ package com.emirates.emiratesIn.model
 		
 		public function addAttention(value:ResultAttentionVO):void
 		{
-			Debug.log("addAttention " + _result.quantative.data.length);
-			
 			_result.quantative.data.push(value);
 		}
 		

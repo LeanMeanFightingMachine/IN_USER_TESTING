@@ -1,5 +1,7 @@
 package com.emirates.emiratesIn.model
 {
+	import com.emirates.emiratesIn.controller.signals.AttentionDisconnectedSignal;
+	import com.emirates.emiratesIn.controller.signals.AttentionConnectedSignal;
 	import com.emirates.emiratesIn.controller.signals.AttentionUpdateSignal;
 	import org.robotlegs.mvcs.Actor;
 
@@ -16,8 +18,29 @@ package com.emirates.emiratesIn.model
 		[Inject]
 		public var attentionUpdatedSignal:AttentionUpdateSignal;
 		
+		[Inject]
+		public var attentionConnectedSignal:AttentionConnectedSignal;
+		
+		[Inject]
+		public var attentionDisconnectedSignal:AttentionDisconnectedSignal;
+		
 		public function AttentionModel()
 		{
+		}
+		
+		public function reset():void
+		{
+			_history.length = 0;
+		}
+		
+		public function connected():void
+		{
+			attentionConnectedSignal.dispatch();
+		}
+		
+		public function disconnected():void
+		{
+			attentionDisconnectedSignal.dispatch();
 		}
 		
 		public function add(value:int):void

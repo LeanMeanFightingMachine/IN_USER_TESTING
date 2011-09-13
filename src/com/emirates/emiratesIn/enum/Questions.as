@@ -5,8 +5,8 @@ package com.emirates.emiratesIn.enum
 	 */
 	public class Questions
 	{
-		public static const DIFFICULTY:Object = {"id":1,"question":"How difficult did you find completing this test?", "answers":["Very easy", "Easy", "OK", "Difficult", "Very difficult"]};
-		public static const CONTROL:Object = {"id":2,"question":"On a scale of 1 to 5, how in control did you feel?", "answers":["1", "2", "3", "4", "5"]};
-		public static const FEEDBACK:Object = {"id":3,"question":"Did you prefer it with or without the feedback graph?", "answers":["With", "Without"]};
+		public static const ENJOYABLE:Object = {"id":1,"question":"How enjoyable did you find the experience?","min":"unpleasant","max":"enjoyable"};
+		public static const DIFFICULT:Object = {"id":2,"question":"How difficult did you find the experience?","min":"easy","max":"hard"};
+		public static const CONTROL:Object = {"id":3,"question":"How much control did you feel you had of the experience?","min":"no control","max":"complete control"};
 	}
 }

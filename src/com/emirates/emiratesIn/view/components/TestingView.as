@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn.view.components
 {
+	import com.emirates.emiratesIn.display.video.VideoPlayer;
 	import com.emirates.emiratesIn.display.ui.Feedback;
 	import com.emirates.emiratesIn.display.ui.Popup;
 	import com.emirates.emiratesIn.display.ui.QuestionScreen;
@@ -31,12 +32,26 @@ package com.emirates.emiratesIn.view.components
 		private var _testQuestionsScreen:QuestionScreen = new QuestionScreen();
 		private var _vignette:Vignette = new Vignette();
 		private var _feedback:Feedback = new Feedback();
+		private var _video : VideoPlayer = new VideoPlayer(Config.VIDEO_PATH);
+		private var _faces : Vector.<VideoPlayer> = new Vector.<VideoPlayer>();
+		private var _face:VideoPlayer;
 		
 		private var _feedbackOn:Boolean;
 		
 		public function TestingView()
 		{
 			super();
+			
+			addChild(_video);
+			
+			var v:VideoPlayer;
+			for (var j : int = 0; j < Config.FACES_PATHS.length; j++)
+			{
+				v = new VideoPlayer(Config.FACES_PATHS[j]);
+				v.visible = false;
+				addChild(v);
+				_faces.push(v);
+			}
 
 			addChild(_vignette);
 			
@@ -77,7 +92,7 @@ package com.emirates.emiratesIn.view.components
 			_testQuestionsScreen.button = Dict.TESTING_TEST_QUESTIONS_BUTTON;
 			for (var i : int = 0; i < Config.TESTING_QUESTIONS.length; i++)
 			{
-				_testQuestionsScreen.ask(Config.TESTING_QUESTIONS[i]["id"], Config.TESTING_QUESTIONS[i]["question"], Config.TESTING_QUESTIONS[i]["answers"]);
+				_testQuestionsScreen.ask(Config.TESTING_QUESTIONS[i]["id"], Config.TESTING_QUESTIONS[i]["question"], Config.TESTING_QUESTIONS[i]["min"], Config.TESTING_QUESTIONS[i]["max"]);
 			}
 			_testQuestionsScreen.addEventListener(ScreenEvent.NEXT, testQuestionsPopupComplete);
 			addChild(_testQuestionsScreen);
@@ -88,6 +103,20 @@ package com.emirates.emiratesIn.view.components
 			super.show();
 			
 			_introScreen.show();
+		}
+		
+		override protected function resize() : void
+		{
+			super.resize();
+			
+			_video.width = stage.stageWidth;
+			_video.height = stage.stageHeight;
+			
+			for (var i : int = 0; i < _faces.length; i++)
+			{
+				_faces[i].width = stage.stageWidth;
+				_faces[i].height = stage.stageHeight;
+			}
 		}
 		
 		public function test(vo:TestVO):void
@@ -148,6 +177,10 @@ package com.emirates.emiratesIn.view.components
 		
 		public function hotspot():void
 		{
+			_face = _faces[int(Math.random() * _faces.length)];
+			_face.visible = true;
+			_face.play();
+			
 			_vignette.show();
 		}
 		
@@ -158,11 +191,17 @@ package com.emirates.emiratesIn.view.components
 		
 		public function success():void
 		{
+			_video.pause();
+			_face.pause();
+			
 			_testSuccessPopup.show();
 		}
 		
 		public function fail():void
 		{
+			_video.pause();
+			_face.pause();
+			
 			_testFailPopup.show();
 			_vignette.stop();
 		}
@@ -183,6 +222,11 @@ package com.emirates.emiratesIn.view.components
 		
 		private function next():void
 		{
+			_face.seek(0);
+			_face.visible = false;
+			
+			_video.seek(0);
+			
 			_feedback.reset();
 			_vignette.reset();
 			
@@ -194,6 +238,8 @@ package com.emirates.emiratesIn.view.components
 			_testIntroPopup.hide();
 
 			dispatchEvent(new TestingEvent(TestingEvent.START));
+			
+			_video.play();
 		}
 		
 		private function testSuccessPopupComplete(event : PopupEvent) : void

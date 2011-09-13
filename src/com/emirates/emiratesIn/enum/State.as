@@ -8,5 +8,6 @@ package com.emirates.emiratesIn.enum
 		public static const INTRODUCTION:String = "State_introduction";
 		public static const TRAINING:String = "State_training";
 		public static const TESTING:String = "State_testing";
+		public static const CONNECT:String = "State_connect";
 	}
 }

@@ -6,6 +6,6 @@ package com.emirates.emiratesIn.vo
 	public class ResultQualativeAnswerVO
 	{
 		public var questionID:int;
-		public var answerID:int;
+		public var answer:Number;
 	}
 }

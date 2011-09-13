@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn.net
 {
+	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import com.emirates.emiratesIn.net.events.AttentionEvent;
@@ -18,7 +19,7 @@ package com.emirates.emiratesIn.net
 		// PUBLIC STATIC MEMBERS
 		// ----------------------------------------------------------------
 		public static var connected : Boolean = false;
-		public static var fake : Boolean = true;
+		public static var fake : Boolean = false;
 		
 		// ----------------------------------------------------------------
 		// PRIVATE STATIC MEMBERS
@@ -123,15 +124,18 @@ package com.emirates.emiratesIn.net
 		
 		private static function onPacketReceived(event : MindSocketEvent) : void
 		{
-			if (isNaN(MindSocket.currentPacket.attention) || MindSocket.currentPacket.attention == 0 && !MindSocket.currentPacket.blink)
+			if (MindSocket.currentPacket.signal > 0 || isNaN(MindSocket.currentPacket.attention) || MindSocket.currentPacket.attention == 0)
 			{
-				if (connected)
+				if(!MindSocket.currentPacket.blink)
 				{
-					connected = false;
-					dispatchEvent(new AttentionEvent(AttentionEvent.DISCONNECTED));
+					if (connected)
+					{
+						connected = false;
+						dispatchEvent(new AttentionEvent(AttentionEvent.DISCONNECTED));
+					}
 				}
 			}
-			else if (!MindSocket.currentPacket.blink)
+			else
 			{
 				if (!connected)
 				{
@@ -139,8 +143,6 @@ package com.emirates.emiratesIn.net
 					dispatchEvent(new AttentionEvent(AttentionEvent.CONNECTED));
 				}
 				
-				processData(MindSocket.currentPacket.attention);
-
 				dispatchEvent(new AttentionEvent(AttentionEvent.UPDATED, MindSocket.currentPacket.attention));
 			}
 		}

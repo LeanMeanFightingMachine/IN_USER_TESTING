@@ -9,6 +9,10 @@ package com.emirates.emiratesIn.enum
 		public static const INTRODUCTION_INTRO_BODY:String = "Lorem ipsum.";
 		public static const INTRODUCTION_INTRO_BUTTON:String = "Start";
 		
+		public static const CONNECT_INTRO_HEADING:String = "Connect headset";
+		public static const CONNECT_INTRO_BODY:String = "Make sure the headset is connected.";
+		public static const CONNECT_INTRO_BUTTON:String = "Start";
+		
 		public static const TRAINING_INTRO_HEADING:String = "Training";
 		public static const TRAINING_INTRO_BODY:String = "Before starting testing you first need to do a bit of training.";
 		public static const TRAINING_INTRO_BUTTON:String = "Start";

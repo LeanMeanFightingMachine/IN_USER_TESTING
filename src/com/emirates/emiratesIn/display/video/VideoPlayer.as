@@ -1,5 +1,6 @@
 package com.emirates.emiratesIn.display.video
 {
+	import com.emirates.emiratesIn.display.ui.debug.Debug;
 	import flash.utils.getTimer;
 	import flash.utils.Timer;
 	import com.emirates.emiratesIn.display.video.events.VideoPlayerEvent;
@@ -172,6 +173,8 @@ package com.emirates.emiratesIn.display.video
 		// ----------------------------------------------------------------
 		private function onNetStatus(event : NetStatusEvent) : void
 		{
+			Debug.log(">>> " + event.info["code"]);
+			
 			if(event.info["code"] == "NetStream.Play.Start")
 			{
 				addEventListener(Event.ENTER_FRAME, enterFrameHandler);

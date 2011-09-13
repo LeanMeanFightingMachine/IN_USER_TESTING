@@ -28,9 +28,9 @@ package com.emirates.emiratesIn.display.ui
 			}
 		}
 		
-		public function ask(id:int, question:String, answers:Array):void
+		public function ask(id:int, question:String, min:String, max:String):void
 		{
-			var q:Question = new Question(id, question, answers);
+			var q:Question = new Question(id, question, min, max);
 			q.x = 20;
 			addChild(q);
 			_questions.push(q);
@@ -47,7 +47,7 @@ package com.emirates.emiratesIn.display.ui
 			{
 				an = new ResultQualativeAnswerVO();
 				an.questionID = _questions[i].id;
-				an.answerID = _questions[i].answer;
+				an.answer = _questions[i].answer;
 				ans.push(an);
 			}
 			

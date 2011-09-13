@@ -126,21 +126,16 @@ package com.emirates.emiratesIn.view
 		
 		private function testUpdateHandler(vo:UpdateVO):void
 		{
-			Debug.log("testUpdateHandler " + vo.attention);
-			
 			view.update(vo);
 		}
 		
 		private function testSuccessHandler(time:int):void
 		{
-			Debug.log("testSuccessHandler");
 			view.success();
 		}
 		
 		private function testFailHandler():void
 		{
-			Debug.log("testFailHandler");
-			
 			view.fail();
 		}
 		

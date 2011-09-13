@@ -1,12 +1,10 @@
 package com.emirates.emiratesIn
 {
-	import com.emirates.emiratesIn.controller.commands.TestSuccessCommand;
-	import com.emirates.emiratesIn.display.ui.debug.Debug;
-	import org.osflash.thunderbolt.Logger;
-	import com.emirates.emiratesIn.view.OutputMediator;
-	import com.emirates.emiratesIn.view.components.OutputView;
-	import com.emirates.emiratesIn.controller.signals.ShowHideOutputSignal;
+	import com.emirates.emiratesIn.controller.signals.AttentionDisconnectedSignal;
+	import com.emirates.emiratesIn.controller.signals.AttentionConnectedSignal;
 	import com.emirates.emiratesIn.controller.commands.AnswersCompleteCommand;
+	import com.emirates.emiratesIn.controller.commands.AttentionConnectedCommand;
+	import com.emirates.emiratesIn.controller.commands.AttentionDisconnectedCommand;
 	import com.emirates.emiratesIn.controller.commands.AttentionUpdateCommand;
 	import com.emirates.emiratesIn.controller.commands.GotNextStateCommand;
 	import com.emirates.emiratesIn.controller.commands.GotNextTestCommand;
@@ -18,12 +16,14 @@ package com.emirates.emiratesIn
 	import com.emirates.emiratesIn.controller.commands.TestInitialCommand;
 	import com.emirates.emiratesIn.controller.commands.TestRetryCommand;
 	import com.emirates.emiratesIn.controller.commands.TestStartCommand;
+	import com.emirates.emiratesIn.controller.commands.TestSuccessCommand;
 	import com.emirates.emiratesIn.controller.commands.TestUpdateCommand;
 	import com.emirates.emiratesIn.controller.signals.AnswersCompleteSignal;
 	import com.emirates.emiratesIn.controller.signals.AttentionUpdateSignal;
 	import com.emirates.emiratesIn.controller.signals.GotNextStateSignal;
 	import com.emirates.emiratesIn.controller.signals.GotNextTestSignal;
 	import com.emirates.emiratesIn.controller.signals.NoTestsSignal;
+	import com.emirates.emiratesIn.controller.signals.ShowHideOutputSignal;
 	import com.emirates.emiratesIn.controller.signals.StateCompleteSignal;
 	import com.emirates.emiratesIn.controller.signals.TestCompleteSignal;
 	import com.emirates.emiratesIn.controller.signals.TestFailSignal;
@@ -41,10 +41,14 @@ package com.emirates.emiratesIn
 	import com.emirates.emiratesIn.net.Attention;
 	import com.emirates.emiratesIn.net.events.AttentionEvent;
 	import com.emirates.emiratesIn.service.DatabaseService;
+	import com.emirates.emiratesIn.view.ConnectMediator;
 	import com.emirates.emiratesIn.view.IntroductionMediator;
+	import com.emirates.emiratesIn.view.OutputMediator;
 	import com.emirates.emiratesIn.view.TestingMediator;
 	import com.emirates.emiratesIn.view.TrainingMediator;
+	import com.emirates.emiratesIn.view.components.ConnectView;
 	import com.emirates.emiratesIn.view.components.IntroductionView;
+	import com.emirates.emiratesIn.view.components.OutputView;
 	import com.emirates.emiratesIn.view.components.TestingView;
 	import com.emirates.emiratesIn.view.components.TrainingView;
 
@@ -70,6 +74,8 @@ package com.emirates.emiratesIn
 			
 			// Events to commands
 			commandMap.mapEvent(AttentionEvent.UPDATED, AttentionUpdateCommand, AttentionEvent);
+			commandMap.mapEvent(AttentionEvent.CONNECTED, AttentionConnectedCommand, AttentionEvent);
+			commandMap.mapEvent(AttentionEvent.DISCONNECTED, AttentionDisconnectedCommand, AttentionEvent);
 			commandMap.mapEvent(KeyboardEvent.KEY_DOWN, KeyDownCommand, KeyboardEvent);
 			
 			// Models
@@ -84,6 +90,8 @@ package com.emirates.emiratesIn
 
 			// Signals
 			injector.mapSingleton(AttentionUpdateSignal);
+			injector.mapSingleton(AttentionConnectedSignal);
+			injector.mapSingleton(AttentionDisconnectedSignal);
 			
 			injector.mapSingleton(TestCompleteSignal);
 			injector.mapSingleton(TestInitialSignal);
@@ -116,6 +124,7 @@ package com.emirates.emiratesIn
 			// Views
 			mediatorMap.mapView(IntroductionView, IntroductionMediator);
 			mediatorMap.mapView(TestingView, TestingMediator);
+			mediatorMap.mapView(ConnectView, ConnectMediator);
 			mediatorMap.mapView(TrainingView, TrainingMediator);
 			mediatorMap.mapView(OutputView, OutputMediator);
 
@@ -123,8 +132,11 @@ package com.emirates.emiratesIn
 			contextView.addChild(new TestingView());
 			contextView.addChild(new TrainingView());
 			contextView.addChild(new OutputView());
+			contextView.addChild(new ConnectView());
 
 			Attention.addEventListener(AttentionEvent.UPDATED, attentionUpdatedHandler);
+			Attention.addEventListener(AttentionEvent.CONNECTED, attentionConnectedHandler);
+			Attention.addEventListener(AttentionEvent.DISCONNECTED, attentionDisconnectedHandler);
 			Attention.start();
 			
 			contextView.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
@@ -135,10 +147,21 @@ package com.emirates.emiratesIn
 		private function keyDownHandler(event : KeyboardEvent) : void
 		{
 			eventDispatcher.dispatchEvent(event);
-			Debug.log("keyDownHandler");
 		}
 
 		private function attentionUpdatedHandler(event : AttentionEvent) : void
+		{
+			
+			eventDispatcher.dispatchEvent(event);
+		}
+		
+		private function attentionConnectedHandler(event : AttentionEvent) : void
+		{
+			
+			eventDispatcher.dispatchEvent(event);
+		}
+		
+		private function attentionDisconnectedHandler(event : AttentionEvent) : void
 		{
 			
 			eventDispatcher.dispatchEvent(event);

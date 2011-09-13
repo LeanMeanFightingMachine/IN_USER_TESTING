@@ -46,6 +46,7 @@ package com.emirates.emiratesIn.model
 							testVO.adjust = k * Config.TESTING_INCREMENT;
 							testVO.level = k;
 							testVO.feedback = (l == 0);
+							
 							_order.push(testVO);
 						}
 					}
@@ -55,8 +56,6 @@ package com.emirates.emiratesIn.model
 			Debug.log("No. tests: " + _order.length);
 			
 			ArrayUtil.shuffle(_order);
-			
-			Debug.log("TestingModel reset");
 		}
 		
 		public function next():void

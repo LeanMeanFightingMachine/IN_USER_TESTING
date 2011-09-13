@@ -98,8 +98,6 @@ package com.emirates.emiratesIn.model
 				update.hotspot = _hotspot;
 				update.time = getTimer() - _startStamp;
 				
-				Debug.log("attention: " + attention.raw + " target: " + _target);
-
 				if (_hotspot && attention.raw >= _target)
 				{
 					update.hit = true;

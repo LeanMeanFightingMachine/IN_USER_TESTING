@@ -26,7 +26,7 @@ package com.emirates.emiratesIn.controller.commands
 			
 			for (var i : int = 0; i < answers.length; i++)
 			{
-				databaseService.insertAnswer(answers[i].questionID, answers[i].answerID);
+				databaseService.insertAnswer(answers[i].questionID, answers[i].answer);
 			}
 		}
 	}

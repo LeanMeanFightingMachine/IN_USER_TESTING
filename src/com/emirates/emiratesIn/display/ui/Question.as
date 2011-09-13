@@ -14,12 +14,11 @@ package com.emirates.emiratesIn.display.ui
 	{
 		protected var _questionText:TextField;
 		protected var _questionFormat:TextFormat;
-		protected var _answers:Vector.<Answer> = new Vector.<Answer>();
-		private var _answerContainer:Sprite = new Sprite();
+		private var _slider:Slider;
 		private var _answer:int = -1;
 		private var _id:int;
 		
-		public function Question(id:int,question:String,answers:Array)
+		public function Question(id:int,question:String,min:String,max:String)
 		{
 			super();
 			
@@ -40,32 +39,16 @@ package com.emirates.emiratesIn.display.ui
 			_questionText.text = question;	
 			addChild(_questionText);
 			
-			addChild(_answerContainer);
-			_answerContainer.y = _questionText.y + _questionText.height + 10;
-			
-			var pos:int;
-			var an:Answer;
-			for (var i : int = 0; i < answers.length; i++)
-			{
-				an = new Answer(i, answers[i]);
-				an.x = pos;
-				an.addEventListener(MouseEvent.CLICK, answerClickHandler);
-				pos = an.x + an.width + 30;
-				_answerContainer.addChild(an);
-				_answers.push(an);
-			}
+			_slider = new Slider(min, max);
+			addChild(_slider);
+			_slider.y = _questionText.y + _questionText.height + 10;
 			
 			show();
 		}
 		
 		public function reset():void
 		{
-			_answer = -1;
 			
-			for (var i : int = 0; i < _answers.length; i++)
-			{
-				_answers[i].unselect();
-			}
 		}
 		
 		public function get id():int
@@ -78,23 +61,6 @@ package com.emirates.emiratesIn.display.ui
 			return _answer;
 		}
 
-		private function answerClickHandler(event : MouseEvent) : void
-		{
-			var an : Answer = event.target as Answer;
-			
-			_answer = an.id;
-			
-			for (var i : int = 0; i < _answers.length; i++)
-			{
-				if(i == an.id)
-				{
-					_answers[i].select();
-				}
-				else
-				{
-					_answers[i].unselect();
-				}
-			}
-		}
+		
 	}
 }

@@ -72,8 +72,11 @@ package com.emirates.emiratesIn.display.ui
 		{
 			super.draw();
 			
-			var w:int = stage.stageWidth;
-			var h:int = stage.stageHeight;
+			var w:int = stage.stageWidth * Math.sqrt(2);
+			var h:int = stage.stageHeight * Math.sqrt(2);
+			
+			x = -(w - stage.stageWidth) * 0.5;
+			y = -(h - stage.stageHeight) * 0.5;
 			
 			var colours:Array = [0x000000,0x000000];
 			var alphas : Array = [0, 1];

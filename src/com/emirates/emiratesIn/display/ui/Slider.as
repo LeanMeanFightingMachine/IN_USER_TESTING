@@ -56,17 +56,32 @@ package com.emirates.emiratesIn.display.ui
 			_control.y = 27;
 			
 			_control.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-			_control.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+			
+			_control.buttonMode = true;
+		}
+		
+		public function reset():void
+		{
+			_control.x = 242;
+		}
+		
+		public function get value():Number
+		{
+			return int(((_control.x - 2) / 480) * 10) / 10;
 		}
 
 		private function mouseUpHandler(event : MouseEvent) : void
 		{
-			_control.startDrag(false,new Rectangle(2,27,480,0));
+			stage.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+			
+			_control.stopDrag();
 		}
 
 		private function mouseDownHandler(event : MouseEvent) : void
 		{
+			_control.startDrag(false,new Rectangle(2,27,480,0));
 			
+			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 		}
 	}
 }

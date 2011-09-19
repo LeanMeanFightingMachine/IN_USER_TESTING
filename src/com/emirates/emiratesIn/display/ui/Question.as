@@ -15,7 +15,6 @@ package com.emirates.emiratesIn.display.ui
 		protected var _questionText:TextField;
 		protected var _questionFormat:TextFormat;
 		private var _slider:Slider;
-		private var _answer:int = -1;
 		private var _id:int;
 		
 		public function Question(id:int,question:String,min:String,max:String)
@@ -48,7 +47,7 @@ package com.emirates.emiratesIn.display.ui
 		
 		public function reset():void
 		{
-			
+			_slider.reset();
 		}
 		
 		public function get id():int
@@ -56,9 +55,9 @@ package com.emirates.emiratesIn.display.ui
 			return _id;
 		}
 		
-		public function get answer():int
+		public function get answer():Number
 		{
-			return _answer;
+			return _slider.value;
 		}
 
 		

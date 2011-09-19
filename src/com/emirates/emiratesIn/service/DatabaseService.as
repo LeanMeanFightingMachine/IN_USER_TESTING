@@ -167,7 +167,7 @@ package com.emirates.emiratesIn.service
 			}
 		}
 		
-		public function insertAnswer(question:int, answer:int):void
+		public function insertAnswer(question:int, answer:Number):void
 		{
 			Debug.log("insertAnswer");
 			
@@ -266,7 +266,7 @@ package com.emirates.emiratesIn.service
 			
 			var statement:SQLStatement = new SQLStatement();
 			statement.sqlConnection = _connection;
-			var sql : String = "CREATE TABLE IF NOT EXISTS answers ( id INTEGER PRIMARY KEY AUTOINCREMENT, created INTEGER NOT NULL, test INTEGER, question INTEGER, answer INTEGER )";
+			var sql : String = "CREATE TABLE IF NOT EXISTS answers ( id INTEGER PRIMARY KEY AUTOINCREMENT, created INTEGER NOT NULL, test INTEGER, question INTEGER, answer NUMERIC )";
 			statement.text = sql;
 			
 			try
